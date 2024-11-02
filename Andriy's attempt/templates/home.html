@@ -3,16 +3,43 @@
 {% block title %}Головна{% endblock %}
 
 {% block content %}
-<h1 class="text-3xl font-bold mb-4">Ласкаво просимо на головну сторінку</h1>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-        <img src="https://via.placeholder.com/400x300" alt="Placeholder" class="w-full rounded-lg shadow-md">
-    </div>
-    <div>
-        <p class="text-lg">
-            Це приклад тексту для головної сторінки. Тут ви можете додати інформацію про ваш проєкт,
-            компанію або будь-який інший контент, який ви хочете показати відвідувачам.
-        </p>
-    </div>
+<style>
+    .input-container{
+        align-items: center;
+        justify-content: center;
+        display: flex
+    }
+    .input-container {
+        display: flex;    
+        flex-direction: column;
+        align-items: center;    
+    }
+    input {
+        padding: 0 0 0 40px;    
+        margin: -30px 0 30px 0;    
+        border: 1px solid #c2c0c7;    
+        border-radius: 5px;    
+        width: 480px;    
+        height: 60px;    
+        border-radius: 50px;     
+        background-color: #000000;    
+        color: #ffffff;    
+    }
+    .block{
+        height: 300px;
+        width: auto;
+        background-color: #e2e2e2;
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.307)
+    }
+</style>
+
+<div class="input-container">
+    <input type="text" placeholder="Search">
 </div>
+
+<div class="block">
+    <div class=""></div>
+    <div class="season_hits"></div>
+</div>
+
 {% endblock %}

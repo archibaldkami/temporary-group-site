@@ -117,11 +117,12 @@ body.fixed {
 	display: block;
 	height: 26px;
 	width: 340px;
-	background: gray;
+	background: #efefef;
 	position: absolute;
 	bottom: -13px;
 	left: 50%;
 	transform: translateX(-50%);
+	border-radius: 13px;
 }
 
 main {

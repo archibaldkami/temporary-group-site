@@ -7,9 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 	<link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
 </head>
-
 <body>
-
 	<header>
 		<div class="container">
 			<div class="header__wrapper">
@@ -18,11 +16,9 @@
 					<figure></figure>
 					<figure></figure>
 				</button>
-
 				<div class="header__title">
 					<span>Devas</span>
 				</div>
-
 				<div class="header__links">
 					<a href="">
 						<img src="{{ url_for('static', filename='images/icon_favorite.svg') }}" alt="Logo">
@@ -47,14 +43,11 @@
 			</nav>
 		</div>
 	</header>
-
 	<main>
 		<div class="container mx-auto mt-8 p-4">
 			{% block content %}{% endblock %}
 		</div>
 	</main>
-
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-
 </html>
