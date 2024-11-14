@@ -10,10 +10,22 @@ def init_db():
     conn = get_db_connection()
     conn.execute('CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, message TEXT)')
     conn.execute('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL, image TEXT)')
-    conn.execute('CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, address TEXT, total_price REAL, status TEXT, date TEXT)')
+    conn.execute('CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, address TEXT, total_price REAL, status TEXT, date TEXT, FOREIGN KEY (category_id) REFERENCES categories (id), FOREIGN KEY (subcategory_id) REFERENCES subcategories (id))')
     conn.execute('CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER, product_id INTEGER, quantity INTEGER, FOREIGN KEY (order_id) REFERENCES orders (id), FOREIGN KEY (product_id) REFERENCES products (id))')
+    conn.execute('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)')
+    conn.execute('CREATE TABLE IF NOT EXISTS subcategories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, FOREIGN KEY (category_id) REFERENCES categories (id))')
     conn.commit()
     conn.close()
+
+def get_products_list() -> list[dict]: 
+    """Get list with item dicts"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Products')
+    products = cursor.fetchall()
+    products = [dict(p) for p in products]
+    conn.close()
+    return products
 
 def get_products():
     conn = get_db_connection()
@@ -39,6 +51,37 @@ def get_orders():
     orders = conn.execute('SELECT * FROM orders').fetchall()
     conn.close()
     return orders
+
+def get_categories():
+    conn = get_db_connection()
+    categories = conn.execute('SELECT * FROM categories').fetchall()
+    conn.close()
+    return categories
+
+def get_category_name(category_id):
+    """Отримує назву категорії за її id"""
+    conn = get_db_connection() 
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM categories WHERE id = ?', (category_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result['name'] if result else "Невідома категорія"
+
+def get_subcategory_name(subcategory_id):
+    """Отримує назву підкатегорії за її id"""
+    conn = get_db_connection() 
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM subcategories WHERE id = ?', (subcategory_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result['name'] if result else "Невідома категорія"
+
+
+def get_subcategories():
+    conn = get_db_connection()
+    subcategories = conn.execute('SELECT * FROM subcategories').fetchall()
+    conn.close()
+    return subcategories
 
 def get_order_details(order_id):
     conn = get_db_connection()

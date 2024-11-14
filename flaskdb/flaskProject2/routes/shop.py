@@ -1,11 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from models import get_products, add_order
+from models import get_products_list, add_order, get_category_name, get_subcategory_name, get_products
 
 shop_bp = Blueprint('shop', __name__)
 
 @shop_bp.route('/shop')
 def shop():
-    products = get_products()
+    products = get_products_list()
+    for product in products:
+        product['category'] = get_category_name(product['category'])
+        product['subcategory'] = get_subcategory_name(product['subcategory'])
     return render_template('shop.html', products=products)
 
 @shop_bp.route('/add_to_cart/<int:product_id>')
