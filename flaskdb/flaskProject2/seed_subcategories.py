@@ -6,7 +6,7 @@ def seed_products():
     categories = [
         ('Кросівки', 1)
     ]
-    id = (1)
+    # id = (1)
     conn.executemany('INSERT INTO subcategories (name, category_id) VALUES (?, ?)', categories)
     # conn.execute('DELETE FROM subcategories WHERE id = ?', (id,))
     conn.commit()

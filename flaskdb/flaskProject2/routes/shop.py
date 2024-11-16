@@ -1,15 +1,32 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from models import get_products_list, add_order, get_category_name, get_subcategory_name, get_products
+from models import get_products_list, add_order, get_categories, get_subcategories, get_category_name, get_subcategory_name, get_products, get_products_by_category, get_products_by_subcategory
 
 shop_bp = Blueprint('shop', __name__)
+
+@shop_bp.route('/category/<int:category_id>')
+def category(category_id):
+    products = get_products_by_category(category_id)
+    return render_template('shop.html', products=products)
+
+@shop_bp.route('/subcategory/<int:subcategory_id>')
+def subcategory(subcategory_id):
+    products = get_products_by_subcategory(subcategory_id)
+    return render_template('shop.html', products=products)
+
+# @shop_bp.route('/shop')
+# def shop():
+#     products = get_products_list()
+#     for product in products:
+#         product['category'] = get_category_name(product['category'])
+#         product['subcategory'] = get_subcategory_name(product['subcategory'])
+#     return render_template('shop.html', products=products)
 
 @shop_bp.route('/shop')
 def shop():
     products = get_products_list()
-    for product in products:
-        product['category'] = get_category_name(product['category'])
-        product['subcategory'] = get_subcategory_name(product['subcategory'])
-    return render_template('shop.html', products=products)
+    categories = get_categories()
+    subcategories = get_subcategories()
+    return render_template('shop.html', products=products, categories=categories, subcategories=subcategories)
 
 @shop_bp.route('/add_to_cart/<int:product_id>')
 def add_to_cart(product_id):

@@ -17,6 +17,14 @@ def init_db():
     conn.commit()
     conn.close()
 
+def get_products_by_category(category_id):
+    products = get_products()
+    return [p for p in products if p['category'] == category_id]
+
+def get_products_by_subcategory(subcategory_id):
+    products = get_products()
+    return [p for p in products if p['subcategory'] == subcategory_id]
+
 def get_products_list() -> list[dict]: 
     """Get list with item dicts"""
     conn = get_db_connection()
@@ -55,8 +63,16 @@ def get_orders():
 def get_categories():
     conn = get_db_connection()
     categories = conn.execute('SELECT * FROM categories').fetchall()
+    categories = [dict(p) for p in categories]
     conn.close()
     return categories
+
+def get_subcategories():
+    conn = get_db_connection()
+    subcategories = conn.execute('SELECT * FROM subcategories').fetchall()
+    subcategories = [dict(p) for p in subcategories]
+    conn.close()
+    return subcategories
 
 def get_category_name(category_id):
     """Отримує назву категорії за її id"""
@@ -75,13 +91,6 @@ def get_subcategory_name(subcategory_id):
     result = cursor.fetchone()
     conn.close()
     return result['name'] if result else "Невідома категорія"
-
-
-def get_subcategories():
-    conn = get_db_connection()
-    subcategories = conn.execute('SELECT * FROM subcategories').fetchall()
-    conn.close()
-    return subcategories
 
 def get_order_details(order_id):
     conn = get_db_connection()

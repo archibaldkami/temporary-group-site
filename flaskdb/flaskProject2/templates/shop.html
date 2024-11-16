@@ -2,6 +2,29 @@
 {% block title %}Магазин{% endblock %}
 {% block content %}
 <h1 class="text-3xl font-bold mb-4">Магазин</h1>
+
+<div class="mb-4">
+    <h2 class="text-2xl font-bold">Категорії</h2>
+    <div class="flex flex-wrap">
+      {% for category in categories %}
+      <a href="{{ url_for('shop.category', category_id=category.id) }}" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg mr-2 mb-2">
+        {{ category.name }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  
+  <div class="mb-4">
+    <h2 class="text-2xl font-bold">Підкатегорії</h2>
+    <div class="flex flex-wrap">
+      {% for subcategory in subcategories %}
+      <a href="{{ url_for('shop.subcategory', subcategory_id=subcategory.id) }}" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg mr-2 mb-2">
+        {{ subcategory.name }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     {% for product in products %}
         <div class="bg-white p-4 shadow-md rounded-lg relative group">
