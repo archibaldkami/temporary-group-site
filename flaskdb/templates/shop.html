@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Магазин{% endblock %}
+{% block content %}
+<div class="flex">
+    <!-- Sidebar з категоріями -->
+    <div class="w-64 p-4 bg-gray-100">
+        <h2 class="text-xl font-bold mb-4">Категорії</h2>
+        <ul>
+            <li class="mb-2">
+                <a href="{{ url_for('shop.shop') }}" 
+                   class="font-semibold {% if not selected_category %}text-blue-600{% endif %}">
+                    Всі товари
+                </a>
+            </li>
+            {% for category in categories %}
+            <li class="mb-2">
+                <a href="{{ url_for('shop.shop', category=category.id) }}" 
+                   class="font-semibold {% if selected_category == category.id %}text-blue-600{% endif %} hover:text-blue-600">
+                    {{ category.name }}
+                </a>
+                {% if category.subcategories %}
+                <ul class="ml-4">
+                    {% for subcategory in category.subcategories %}
+                    <li class="text-sm text-gray-600">
+                        <a href="{{ url_for('shop.shop', category=category.id, subcategory=subcategory.id) }}"
+                           class="hover:text-blue-600 {% if selected_subcategory == subcategory.id %}text-blue-600{% endif %}">
+                            {{ subcategory.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Основний контент -->
+    <div class="flex-1 p-4">
+        <h1 class="text-3xl font-bold mb-4">Магазин</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+            {% for product in products %}
+            <div class="bg-white p-4 shadow-md rounded-lg relative group">
+                <img src="{{ product.image_url }}" 
+                     alt="{{ product.name }}" 
+                     class="w-full h-80 object-cover mb-2"
+                     onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'"> 
+                <h2 class="text-xl font-semibold">{{ product.name }}</h2>
+                <div class="text-sm text-gray-500">
+                    <p>
+                        <a href="{{ url_for('shop.shop', category=product.category) }}" 
+                           class="hover:text-blue-600">
+                            Категорія: {{ product.category_name }}
+                        </a>
+                    </p>
+                    <p>
+                        <a href="{{ url_for('shop.shop', category=product.category, subcategory=product.subcategory) }}" 
+                           class="hover:text-blue-600">
+                            Підкатегорія: {{ product.subcategory_name }}
+                        </a>
+                    </p>
+                </div>
+                <p class="text-gray-600 mt-2">{{ product.price }} грн</p>
+                <a href="{{ url_for('shop.add_to_cart', product_id=product.id) }}" 
+                   class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    Купити
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
