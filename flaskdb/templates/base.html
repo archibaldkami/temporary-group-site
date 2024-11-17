@@ -10,7 +10,7 @@
 </head>
 <body class="font-sans">
     <header class="relative bg-white">
-        <div class="max-w-[1300px] mx-auto">
+        <div class="max-w-[1400px] mx-auto">
             <!-- Верхня панель -->
             <div class="relative flex items-center justify-between px-4 py-3 border-b border-gray-300">
                 <!-- Бургер меню -->
@@ -27,11 +27,11 @@
 
                 <!-- Іконки справа -->
                 <div class="flex items-center gap-6">
-                    <a href="/favorite" class="flex flex-col items-center gap-1 group">
+                    <a href="/wishlist" class="flex flex-col items-center gap-1 group">
                         <svg class="w-7 h-7 text-gray-700 group-hover:text-gray-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path>
                         </svg>
-                        <span class="text-xs text-gray-700 group-hover:text-gray-900">Favorite</span>
+                        <span class="text-xs text-gray-700 group-hover:text-gray-900">Wishlist</span>
                     </a>
                     <a href="/cart" class="flex flex-col items-center gap-1 group">
                         <svg class="w-7 h-7 text-gray-700 group-hover:text-gray-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -52,9 +52,10 @@
                 <div class="absolute left-1/2 -bottom-4 -translate-x-1/2 w-[340px] h-7 bg-gray-100 rounded-xl"></div>
             </div>
 
+
             <!-- Випадаюче меню -->
-            <nav class="absolute z-10 w-full bg-white overflow-hidden transition-all duration-300 h-0" id="nav-menu">
-                <div class="max-w-[1300px] mx-auto px-4">
+            <nav class="absolute z-10 left-1/2 transform -translate-x-1/2 bg-white overflow-hidden transition-all duration-300 w-full max-w-[1300px] h-0" id="nav-menu">
+                <div class="px-4">
                     <div class="flex justify-center items-center gap-10 py-4">
                         <a href="/" class="text-lg font-medium text-gray-800 hover:text-gray-600 transition-colors">Головна</a>
                         <a href="/shop" class="text-lg font-medium text-gray-800 hover:text-gray-600 transition-colors">Магазин</a>
@@ -63,7 +64,7 @@
                         <a href="/feedback" class="text-lg font-medium text-gray-800 hover:text-gray-600 transition-colors">Зворотній зв'язок</a>
                     </div>
                 </div>
-            </nav>
+            </nav>                        
         </div>
     </header>
 
@@ -82,5 +83,32 @@
             navMenu.style.height = navMenu.style.height === '64px' ? '0' : '64px';
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-ajax');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const url = button.getAttribute('data-url');
+                    
+                    fetch(url, { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                // alert("Товар додано до кошика!");
+                                // Оновіть інтерфейс кошика, якщо потрібно
+                            } else {
+                                alert("Помилка: " + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Помилка:', error);
+                        });
+                });
+            });
+        });
+    </script>
+    
 </body>
 </html>
