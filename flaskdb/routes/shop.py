@@ -89,6 +89,17 @@ def cart():
     total = sum(item['price'] * item['quantity'] for item in cart.values())
     return render_template('cart.html', cart=cart, total=total)
 
+@shop_bp.route('/cart/remove/<int:product_id>', methods=['POST'])
+def remove_from_cart(product_id):
+    cart = session.get('cart', {})
+    product_id_str = str(product_id)
+    if product_id_str in cart:
+        del cart[product_id_str]
+        session['cart'] = cart
+        return {"status": "success", "message": "Product removed from cart"}
+    return {"status": "error", "message": "Product not found in cart"}, 404
+
+
 @shop_bp.route('/checkout', methods=['POST'])
 def checkout():
     cart = session.get('cart', {})
@@ -135,21 +146,3 @@ def wishlist():
             product['image_url'] = url_for('static', filename='images/placeholder.jpg')
         products.append(product)
     return render_template('wishlist.html', products=products)
-
-
-    # products = get_products_list()
-
-    # for product in products:
-    #     category_name, subcategory_name = get_product_categories(product)
-    #     product['category_name'] = category_name
-    #     product['subcategory_name'] = subcategory_name
-        
-    #     # +Зображення
-    #     image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
-    #     if os.path.exists(image_path):
-    #         product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
-    #     else:
-    #         product['image_url'] = url_for('static', filename='images/placeholder.jpg')
-
-    # wishlist = session.get('wishlist', {})
-    # return render_template('wishlist.html', wishlist=wishlist, products=products)
