@@ -1,3 +1,5 @@
+# archibald
+
 from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
 import os
 from models import get_products_list, add_order, get_products,\
@@ -18,33 +20,59 @@ def subcategory(subcategory_id):
 
 # @shop_bp.route('/shop')
 # def shop():
+#     category_id = request.args.get('category', type=int)
+#     subcategory_id = request.args.get('subcategory', type=int)
+    
 #     products = get_products_list()
+#     categories = get_all_categories_with_subcategories()
+    
+#     # Фільтр по категоріям та додавання їх імен до продукту
+#     if subcategory_id:
+#         products = [p for p in products if p['subcategory_id'] == subcategory_id]
+#     elif category_id:
+#         products = [p for p in products if p['category_id'] == category_id]
+
 #     for product in products:
-#         product['category'] = get_category_name(product['category'])
-#         product['subcategory'] = get_subcategory_name(product['subcategory'])
-#     return render_template('shop.html', products=products)
+#         category_name, subcategory_name = get_product_categories(product)
+#         product['category_name'] = category_name
+#         product['subcategory_name'] = subcategory_name
+        
+#         # +Зображення
+#         image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
+#         if os.path.exists(image_path):
+#             product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
+#         else:
+#             product['image_url'] = url_for('static', filename='images/placeholder.jpg')
+    
+#     return render_template('shop.html', products=products, categories=categories, selected_category=category_id, selected_subcategory=subcategory_id)
 
 @shop_bp.route('/shop')
 def shop():
     category_id = request.args.get('category', type=int)
     subcategory_id = request.args.get('subcategory', type=int)
+    search_query = request.args.get('search', '').strip()
     
     products = get_products_list()
     categories = get_all_categories_with_subcategories()
     
-    # Фільтруємо продукти якщо вибрана категорія або підкатегорія
+    # Фільтрація за пошуковим запитом
+    if search_query:
+        products = [p for p in products if 
+                   search_query.lower() in p['name'].lower() or 
+                   search_query.lower() in p.get('description', '').lower()]
+    
+    # Фільтр по категоріям та додавання їх імен до продукту
     if subcategory_id:
         products = [p for p in products if p['subcategory_id'] == subcategory_id]
     elif category_id:
         products = [p for p in products if p['category_id'] == category_id]
-    
-    # Додаємо назви категорій та підкатегорій до продуктів
+
     for product in products:
         category_name, subcategory_name = get_product_categories(product)
         product['category_name'] = category_name
         product['subcategory_name'] = subcategory_name
         
-        # Перевіряємо наявність зображення
+        # +Зображення
         image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
         if os.path.exists(image_path):
             product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
@@ -52,29 +80,14 @@ def shop():
             product['image_url'] = url_for('static', filename='images/placeholder.jpg')
     
     return render_template('shop.html', 
-                         products=products, 
+                         products=products,
                          categories=categories,
                          selected_category=category_id,
-                         selected_subcategory=subcategory_id)
+                         selected_subcategory=subcategory_id,
+                         search_query=search_query)
 
-# @shop_bp.route('/shop')
-# def shop():
-#     products = get_products_list()
-#     categories = get_all_categories_with_subcategories()
 
-#     for product in products:
-#         product['category'] = get_category_name(product['category_id'])
-#         product['subcategory'] = get_subcategory_name(product['subcategory_id'])
-    
-#     return render_template('shop.html', products=products, categories=categories)
-
-# @shop_bp.route('/shop')
-# def shop():
-#     products = get_products_list()
-#     categories = get_categories()
-#     subcategories = get_subcategories()
-#     return render_template('shop.html', products=products, categories=categories, subcategories=subcategories)
-
+# Не те щоб тут багато змінювалось
 @shop_bp.route('/add_to_cart/<int:product_id>')
 def add_to_cart(product_id):
     products = get_products()
