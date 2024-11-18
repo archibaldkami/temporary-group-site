@@ -26,35 +26,35 @@
                 </button>
             </form>
         </div>
-          <h2 class="text-xl font-bold mb-4">Категорії</h2>
-          <ul>
-              <li class="mb-2">
-                  <a href="{{ url_for('shop.shop') }}" 
-                     class="font-semibold {% if not selected_category %}text-blue-600{% endif %}">
-                      Всі товари
-                  </a>
-              </li>
-              {% for category in categories %}
-              <li class="mb-2">
-                  <a href="{{ url_for('shop.shop', category=category.id) }}" 
-                     class="font-semibold {% if selected_category == category.id %}text-blue-600{% endif %} hover:text-blue-600">
-                      {{ category.name }}
-                  </a>
-                  {% if category.subcategories %}
-                  <ul class="ml-4">
-                      {% for subcategory in category.subcategories %}
-                      <li class="text-sm text-gray-600">
-                          <a href="{{ url_for('shop.shop', category=category.id, subcategory=subcategory.id) }}"
-                             class="hover:text-blue-600 {% if selected_subcategory == subcategory.id %}text-blue-600{% endif %}">
-                              {{ subcategory.name }}
-                          </a>
-                      </li>
-                      {% endfor %}
-                  </ul>
-                  {% endif %}
-              </li>
-              {% endfor %}
-          </ul>
+        <h2 class="text-xl font-bold mb-4">Категорії</h2>
+        <ul>
+            <li class="mb-2">
+                <a href="{{ url_for('shop.shop') }}" 
+                   class="font-semibold {% if not selected_category %}text-blue-600{% endif %}">
+                    Всі товари
+                </a>
+            </li>
+            {% for category in categories %}
+            <li class="mb-2">
+                <a href="{{ url_for('shop.shop', category=category.id) }}" 
+                   class="font-semibold {% if selected_category == category.id %}text-blue-600{% endif %} hover:text-blue-600">
+                    {{ category.name }}
+                </a>
+                {% if category.subcategories %}
+                <ul class="ml-4">
+                    {% for subcategory in category.subcategories %}
+                    <li class="text-sm text-gray-600">
+                        <a href="{{ url_for('shop.shop', category=category.id, subcategory=subcategory.id) }}"
+                           class="hover:text-blue-600 {% if selected_subcategory == subcategory.id %}text-blue-600{% endif %}">
+                            {{ subcategory.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 
     <!-- Основний контент -->
@@ -79,35 +79,41 @@
         </div>
         {% else %}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-          {% for product in products %}
-            <div class="bg-white p-4 shadow-md rounded-lg relative group">
+            {% for product in products %}
+            <div class="bg-white p-4 shadow-md rounded-lg">
                 <img src="{{ product.image_url }}" 
-                    alt="{{ product.name }}" 
-                    class="w-full h-80 object-cover mb-2"
-                    onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'"> 
+                     alt="{{ product.name }}" 
+                     class="w-full h-80 object-cover mb-2"
+                     onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'">
                 <h2 class="text-xl font-semibold">{{ product.name }}</h2>
                 <div class="text-sm text-gray-500">
                     <p>
                         <a href="{{ url_for('shop.shop', category=product.category) }}" 
-                          class="hover:text-blue-600">
+                           class="hover:text-blue-600">
                             Категорія: {{ product.category_name }}
                         </a>
                     </p>
                     <p>
                         <a href="{{ url_for('shop.shop', category=product.category, subcategory=product.subcategory) }}" 
-                          class="hover:text-blue-600">
+                           class="hover:text-blue-600">
                             Підкатегорія: {{ product.subcategory_name }}
                         </a>
                     </p>
                 </div>
                 <p class="text-gray-600 mt-2">{{ product.price }} грн</p>
-                <a href="{{ url_for('shop.add_to_cart', product_id=product.id) }}" 
-                  class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    Купити
-                </a>
+                <div class="flex space-x-2 mt-4">
+                    <a href="#" 
+                        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md text-center hover:bg-blue-600 transition-colors add-to-cart-ajax" 
+                        data-url="{{ url_for('shop.add_to_cart_ajax', product_id=product.id) }}">
+                        Купити
+                    </a>
+                    <a href="{{ url_for('shop.add_to_wishlist', product_id=product.id) }}" 
+                        class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-md text-center hover:bg-gray-600 transition-colors">
+                        У бажане
+                    </a>
+                </div>
             </div>
             {% endfor %}
-            {{ super() }}
         </div>
         {% endif %}
     </div>
