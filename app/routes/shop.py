@@ -109,34 +109,34 @@ def checkout():
     session['cart'] = {}
     return redirect(url_for('shop.shop'))
 
-@shop_bp.route('/favorite/add/<int:product_id>')
-def add_to_favorite(product_id):
+@shop_bp.route('/wishlist/add/<int:product_id>')
+def add_to_wishlist(product_id):
     products = get_products()
     product = next((p for p in products if p['id'] == product_id), None)
     if product:
-        favorite = session.get('favorite', {})
-        if str(product_id) not in favorite:
-            favorite[str(product_id)] = {
+        wishlist = session.get('wishlist', {})
+        if str(product_id) not in wishlist:
+            wishlist[str(product_id)] = {
                 'id': product_id,
                 'name': product['name'],
                 'price': product['price'],
                 'image': product['image']
             }
-        session['favorite'] = favorite
+        session['wishlist'] = wishlist
     return redirect(url_for('shop.shop'))
 
-@shop_bp.route('/favorite/remove/<int:product_id>')
-def remove_from_favorite(product_id):
-    favorite = session.get('favorite', {})
-    favorite.pop(str(product_id), None)
-    session['favorite'] = favorite
-    return redirect(url_for('shop.favorite'))
+@shop_bp.route('/wishlist/remove/<int:product_id>')
+def remove_from_wishlist(product_id):
+    wishlist = session.get('wishlist', {})
+    wishlist.pop(str(product_id), None)
+    session['wishlist'] = wishlist
+    return redirect(url_for('shop.wishlist'))
 
-@shop_bp.route('/favorite')
-def favorite():
-    favorite = session.get('favorite', {})
+@shop_bp.route('/wishlist')
+def wishlist():
+    wishlist = session.get('wishlist', {})
     products = []
-    for product_id, details in favorite.items():
+    for product_id, details in wishlist.items():
         product = details.copy()
         # Додаємо URL зображення
         image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
@@ -145,4 +145,4 @@ def favorite():
         else:
             product['image_url'] = url_for('static', filename='images/placeholder.jpg')
         products.append(product)
-    return render_template('favorite.html', products=products)
+    return render_template('wishlist.html', products=products)
