@@ -1,18 +1,81 @@
 {% extends "base.html" %}
 
-{% block title %}Про нас{% endblock %}
+{% block title %}Зворотній зв'язок{% endblock %}
 
 {% block content %}
-<h1 class="text-3xl font-bold mb-4">Про нас</h1>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-        <img src="https://via.placeholder.com/400x300" alt="Placeholder" class="w-full rounded-lg shadow-md">
+<div class="container mx-auto py-12 relative">
+    <!-- Grid для вирівнювання елементів -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 items-center justify-center">
+
+        <!-- Іконка 1 -->
+        <div class="flex flex-col items-center">
+            <div class="w-52 h-32">
+                <img src="../static/images/archibalt.jpg" alt="Archibald Photo" class="w-full h-full object-cover">
+            </div>
+            <div class="mt-4 text-center bg-gray-200 p-4 rounded-xl shadow-md">
+                <p class="font-bold">Archibald</p>
+                <p class="text-sm">Backend (+base.html)</p>
+            </div>
+        </div>
+
+        <!-- Іконка 2 -->
+        <div class="flex flex-col items-center">
+            <div class="w-52 h-32">
+                <img src="../static/images/fakel.jpg" alt="Fackell Photo" class="w-full h-full object-cover">
+            </div>
+            <div class="mt-4 text-center bg-gray-200 p-4 rounded-xl shadow-md">
+                <p class="font-bold">Fackell</p>
+                <p class="text-sm">Frontend (base.html, home.html)</p>
+            </div>
+        </div>
+
+        <!-- Іконка 3 -->
+        <div class="flex flex-col items-center">
+            <div class="w-52 h-32">
+                <img src="../static/images/kasha.jpg" alt="Kmalytt Photo" class="w-full h-full object-cover">
+            </div>
+            <div class="mt-4 text-center bg-gray-200 p-4 rounded-xl shadow-md">
+                <p class="font-bold">Kmalytt</p>
+                <p class="text-sm">Design + Frontend (contacts.html)</p>
+            </div>
+        </div>
     </div>
-    <div>
-        <p class="text-lg">
-            Ми - команда ентузіастів, які працюють над створенням інноваційних рішень.
-            Наша місія - зробити технології доступними та зрозумілими для кожного.
-        </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8 justify-center">
+        <!-- Іконка 4 -->
+        <div class="flex flex-col items-center">
+            <div class="w-52 h-32">
+                <img src="../static/images/nataxa.jpg" alt="Dvastonl Photo" class="w-full h-full object-cover">
+            </div>
+            <div class="mt-4 text-center bg-gray-200 p-4 rounded-xl shadow-md">
+                <p class="font-bold">Dvastonl</p>
+                <p class="text-sm">Frontend (cart.html) + seed products by template</p>
+            </div>
+        </div>
+
+        <!-- Іконка 5 -->
+        <div class="flex flex-col items-center">
+            <div class="w-52 h-32">
+                <img src="../static/images/sofiichaka.jpg" alt="Ersonrisa Photo" class="w-full h-full object-cover">
+            </div>
+            <div class="mt-4 text-center bg-gray-200 p-4 rounded-xl shadow-md">
+                <p class="font-bold">Ersonrisa</p>
+                <p class="text-sm">Frontend (about.html) + seed categories and subcategories</p>
+            </div>
+        </div>
     </div>
+
+    <!-- Напівкруги -->
+    <div class="absolute bottom-0 left-0 w-[800px] h-[800px] bg-gray-100 rounded-full -translate-x-3/4 translate-y-[70%] -z-10"></div>
+    <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-gray-100 rounded-full translate-x-3/4 translate-y-[70%] -z-10"></div>
 </div>
+
+<style>
+    .rounded-xl {
+        border-radius: 20px; /* Закруглення */
+    }
+    .shadow-md {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тінь */
+    }
+</style>
 {% endblock %}
