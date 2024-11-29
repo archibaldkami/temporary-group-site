@@ -8,11 +8,11 @@
     <title>{% block title %}Наш Flask проєкт{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="font-sans">
+<body class="font-sans min-h-screen flex flex-col">
     <header class="relative bg-white">
         <div class="max-w-[1400px] mx-auto">
             <!-- Верхня панель -->
-            <div class="relative flex items-center justify-between px-4 py-3 border-b border-gray-300">
+            <div class="relative flex items-center justify-between px-4 py-3 border-b border-black">
                 <!-- Бургер меню -->
                 <button class="relative z-20 flex flex-col justify-between w-8 h-6 group" id="burger">
                     <span class="w-full h-[3px] bg-gray-800 rounded transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2.5"></span>
@@ -27,11 +27,11 @@
 
                 <!-- Іконки справа -->
                 <div class="flex items-center gap-6">
-                    <a href="/favorite" class="flex flex-col items-center gap-1 group">
+                    <a href="/wishlist" class="flex flex-col items-center gap-1 group">
                         <svg class="w-7 h-7 text-gray-700 group-hover:text-gray-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path>
                         </svg>
-                        <span class="text-xs text-gray-700 group-hover:text-gray-900">Favorite</span>
+                        <span class="text-xs text-gray-700 group-hover:text-gray-900">Wishlist</span>
                     </a>
                     <a href="/cart" class="flex flex-col items-center gap-1 group">
                         <svg class="w-7 h-7 text-gray-700 group-hover:text-gray-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -48,13 +48,12 @@
                     </a>
                 </div>
 
-                <!-- Декоративна лінія -->
-                <div class="absolute left-1/2 -bottom-4 -translate-x-1/2 w-[340px] h-7 bg-gray-100 rounded-xl"></div>
+                <!-- Лінія -->
+                <div class="absolute left-1/2 -bottom-4 -translate-x-1/2 w-[650px] h-7 bg-gray-200 rounded-xl"></div>
             </div>
 
-
             <!-- Випадаюче меню -->
-            <nav class="absolute z-10 left-1/2 transform -translate-x-1/2 bg-white overflow-hidden transition-all duration-300 w-full max-w-[1300px] h-0" id="nav-menu">
+            <nav class="absolute z-10 left-1/2 transform -translate-x-1/2 overflow-hidden transition-all duration-300 bg-gray-200 w-full max-w-[650px] h-0 rounded-b-xl" id="nav-menu">
                 <div class="px-4">
                     <div class="flex justify-center items-center gap-10 py-4">
                         <a href="/" class="text-lg font-medium text-gray-800 hover:text-gray-600 transition-colors">Головна</a>
@@ -64,15 +63,46 @@
                         <a href="/feedback" class="text-lg font-medium text-gray-800 hover:text-gray-600 transition-colors">Зворотній зв'язок</a>
                     </div>
                 </div>
-            </nav>                        
-        </div>
+            </nav>            
     </header>
 
-    <main class="py-10">
-        <div class="max-w-[1300px] mx-auto px-4">
+    <main class="py-10 flex-grow">
+        <div class="w-screen mx-auto ">
             {% block content %}{% endblock %}
         </div>
     </main>
+
+    <footer class="bg-gray-100 text-gray-700 py-4 mt-auto">
+        <div class="max-w-[1400px] mx-auto px-4 bottom-0">
+            <!-- Верхній блок футера -->
+            <div class="flex flex-wrap justify-between items-center text-sm">
+                <!-- Логотип або назва -->
+                <h2 class="text-base font-semibold">Devas</h2>
+
+                <!-- Навігація -->
+                <nav class="flex flex-wrap gap-4">
+                    <a href="/about" class="hover:text-gray-900 transition-colors">Про нас</a>
+                    <a href="/shop" class="hover:text-gray-900 transition-colors">Магазин</a>
+                    <a href="/contacts" class="hover:text-gray-900 transition-colors">Контакти</a>
+                    <a href="/feedback" class="hover:text-gray-900 transition-colors">Зворотній зв'язок</a>
+                </nav>
+    
+                <!-- Контактна інформація -->
+                <div class="text-xs text-gray-500 text-right">
+                    <p>Телефон: +380 (67) 123-45-67</p>
+                    <p>Email: info@devas.com</p>
+                </div>
+            </div>
+    
+            <!-- Розділювальна лінія -->
+            <hr class="my-4 border-gray-300">
+    
+            <!-- Нижній блок футера -->
+            <p class="text-center text-gray-500 text-xs">
+                &copy; 2024 Devas. Усі права захищено.
+            </p>
+        </div>
+    </footer>
 
     <script>
         const burger = document.querySelector('#burger');
