@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="POST">
+    <input type="text" name="name" required placeholder="ПІБ">
+    <input type="email" name="email" required placeholder="Email">
+    <input type="tel" name="phone" placeholder="Телефон">
+    <input type="text" name="address" placeholder="Адреса">
+    <input type="password" name="password" required placeholder="Пароль">
+    
+    <select name="role" required>
+        <option value="">Оберіть роль</option>
+        <option value="buyer">Покупець</option>
+        <option value="seller">Продавець</option>
+    </select>
+    
+    <button type="submit">Зареєструватись</button>
+</form>
+{% endblock %}

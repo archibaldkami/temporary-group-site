@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import os
 from models import get_products_list, add_order, get_products,\
       get_products_by_category, get_products_by_subcategory, get_all_categories_with_subcategories, get_product_categories, \
-      get_category_name, get_subcategory_name
+      add_product_feedback, get_product_details, get_db_connection
 
 shop_bp = Blueprint('shop', __name__)
 
@@ -146,3 +146,54 @@ def wishlist():
             product['image_url'] = url_for('static', filename='images/placeholder.jpg')
         products.append(product)
     return render_template('wishlist.html', products=products)
+
+# @shop_bp.route('/product/<int:product_id>')
+# def product_details(product_id):
+#     product = get_product_details(product_id)
+    
+#     if not product:
+#         return "Продукт не знайдений", 404
+    
+#     # Додаємо URL зображення
+#     image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
+#     if os.path.exists(image_path):
+#         product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
+#     else:
+#         product['image_url'] = url_for('static', filename='images/placeholder.jpg')
+    
+#     return render_template('product_details.html', product=product)
+
+@shop_bp.route('/product/<int:product_id>')
+def product_details(product_id):
+    product = get_product_details(product_id)
+    
+    if not product:
+        return "Продукт не знайдений", 404
+    
+    # Додаємо URL зображення
+    image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
+    if os.path.exists(image_path):
+        product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
+    else:
+        product['image_url'] = url_for('static', filename='images/placeholder.jpg')
+    
+    # Перевіряємо, чи авторизований користувач
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Отримання інформації про користувача
+    if 'user_id' in session:
+        cursor.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
+        user = cursor.fetchone()
+        conn.close()
+        return render_template('product_details.html', product=product, user=user)
+    return render_template('product_details.html', product=product)
+
+@shop_bp.route('/product/<int:product_id>/feedback', methods=['POST'])
+def add_feedback(product_id):
+    name = request.form['name']
+    email = request.form['email']
+    message = request.form['message']
+    
+    add_product_feedback(product_id, name, email, message)
+    return redirect(url_for('shop.product_details', product_id=product_id))

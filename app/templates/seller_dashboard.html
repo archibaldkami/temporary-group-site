@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Панель продавця</h1>
+    
+    <div class="actions">
+        <a href="{{ url_for('seller.add_product') }}" class="btn btn-primary">Додати новий товар</a>
+    </div>
+
+    <h2>Мої товари</h2>
+    {% if products %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Назва</th>
+                    <th>Ціна</th>
+                    <th>Категорія</th>
+                    <th>Підкатегорія</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }} грн</td>
+                    <td>{{ product.category_id }}</td>
+                    <td>{{ product.subcategory_id }}</td>
+                    <td>
+                        <a href="{{ url_for('seller.edit_product', product_id=product.id) }}" class="btn btn-sm btn-warning">Редагувати</a>
+                        <form action="{{ url_for('seller.delete_product', product_id=product.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені?')">Видалити</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>У вас ще немає товарів</p>
+    {% endif %}
+
+    <h2>Замовлення моїх товарів</h2>
+    {% if orders %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Адреса</th>
+                    <th>Сума</th>
+                    <th>Статус</th>
+                    <th>Дата</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.email }}</td>
+                    <td>{{ order.address }}</td>
+                    <td>{{ order.total_price }} грн</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Замовлень ще немає</p>
+    {% endif %}
+</div>
+{% endblock %}

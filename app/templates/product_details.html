@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row gap-8">
+        <div class="md:w-1/2">
+            <img src="{{ product['image_url'] }}" alt="{{ product['name'] }}" class="w-full h-auto object-cover rounded-lg shadow-md">
+        </div>
+        
+        <!-- Інформація про продукт -->
+        <div class="md:w-1/2">
+            <h1 class="text-3xl font-bold mb-4">{{ product['name'] }}</h1>
+            
+            <div class="mb-4">
+                <span class="text-2xl font-semibold text-green-600">{{ product['price'] }} грн</span>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-gray-700">
+                    <strong>Категорія:</strong> {{ product['category_name'] }}
+                    <br>
+                    <strong>Підкатегорія:</strong> {{ product['subcategory_name'] }}
+                </p>
+            </div>
+            
+            <!-- Кнопки дій -->
+            <div class="flex space-x-4 mb-4">
+                <a href="{{ url_for('shop.add_to_cart', product_id=product['id']) }}" 
+                   class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                    Додати в кошик
+                </a>
+                <a href="{{ url_for('shop.add_to_wishlist', product_id=product['id']) }}" 
+                   class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition">
+                    В список бажань
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Секція відгуків -->
+    <div class="mt-8">
+        <h2 class="text-2xl font-bold mb-4">Відгуки</h2>
+        
+        <!-- Форма додавання відгуку -->
+        <form action="{{ url_for('shop.add_feedback', product_id=product['id']) }}" method="POST" class="mb-6">
+            <div class="mb-4">
+                <input type="text" name="name" placeholder="Ваше ім'я" required 
+                       value="{{ user.name if user else '' }}"
+                       {% if user %}readonly{% endif %}
+                       class="w-full px-3 py-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <input type="email" name="email" placeholder="Ваш email" required 
+                       value="{{ user.email if user else '' }}"
+                       {% if user %}readonly{% endif %}
+                       class="w-full px-3 py-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <textarea name="message" placeholder="Ваш відгук" required 
+                          class="w-full px-3 py-2 border rounded h-24"></textarea>
+            </div>
+            
+            <button type="submit" 
+                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
+                Надіслати відгук
+            </button>
+        </form>
+        
+        <!-- Список відгуків -->
+        {% if product['feedback'] %}
+            {% for feedback in product['feedback'] %}
+            <div class="bg-gray-100 p-4 rounded mb-4">
+                <div class="flex justify-between mb-2">
+                    <h3 class="font-semibold">{{ feedback['name'] }}</h3>
+                    <span class="text-gray-500 text-sm">{{ feedback['date'] }}</span>
+                </div>
+                <p>{{ feedback['message'] }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-gray-500">Поки що немає відгуків для цього продукту.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

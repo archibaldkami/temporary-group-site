@@ -3,6 +3,9 @@ from models import init_db
 from routes.feedback import feedback_bp
 from routes.admin import admin_bp
 from routes.shop import shop_bp
+from routes.auth import auth_bp
+from routes.seller import seller_bp
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Необхідно для роботи з сесіями
@@ -14,6 +17,8 @@ init_db()
 app.register_blueprint(feedback_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(shop_bp)
+app.register_blueprint(auth_bp)
+app.register_blueprint(seller_bp)
 
 @app.route('/')
 def home():

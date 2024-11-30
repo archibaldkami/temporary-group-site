@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+# from seed_data import *
 
 def get_db_connection():
     conn = sqlite3.connect('db.sqlite')
@@ -8,16 +9,27 @@ def get_db_connection():
 
 def init_db():
     conn = get_db_connection()
-    conn.execute('CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, message TEXT)')
+    # conn.execute('CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, message TEXT)')
     conn.execute('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)')
     conn.execute('CREATE TABLE IF NOT EXISTS subcategories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, category_id INTEGER, FOREIGN KEY (category_id) REFERENCES categories (id))')
-    conn.execute('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL, image TEXT, category_id INTEGER, subcategory_id INTEGER, FOREIGN KEY (category_id) REFERENCES categories (id), FOREIGN KEY (subcategory_id) REFERENCES subcategories (id))')
+    conn.execute('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL, image TEXT, seller_id INTEGER DEFAULT NULL, category_id INTEGER, subcategory_id INTEGER, FOREIGN KEY (category_id) REFERENCES categories (id), FOREIGN KEY (subcategory_id) REFERENCES subcategories (id), FOREIGN KEY (seller_id) REFERENCES users(id))')
+    conn.execute('CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, name TEXT, email TEXT, message TEXT, date TEXT, FOREIGN KEY (product_id) REFERENCES products (id))')
     conn.execute('CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, address TEXT, total_price REAL, status TEXT, date TEXT)')
     conn.execute('CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER, product_id INTEGER, quantity INTEGER, FOREIGN KEY (order_id) REFERENCES orders (id), FOREIGN KEY (product_id) REFERENCES products (id))')
+    conn.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL, phone TEXT, address TEXT, password TEXT NOT NULL, role TEXT NOT NULL DEFAULT \'buyer\')')
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM users WHERE email = ?', ("admin@admin",))
+    admin = cursor.fetchone()
+    if not admin:
+        conn.execute('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', ("admin", "admin@admin", "scrypt:32768:8:1$EBFi3PMcco1xiBrc$f769346f940011b1c2354c7c463c92d6ee72b1241c34efd57ab6184479fc256c8b75a996f902989faffea16154ec71b12b7b9934ea237a24f9443cb65a9a78a3", "admin"))
     conn.commit()
-    # category_id INTEGER, FOREIGN KEY (category_id) REFERENCES categories (id), 
-    # subcategory_id INTEGER, FOREIGN KEY (subcategory_id) REFERENCES subcategories (id)
     conn.close()
+
+    # # Закоментувати
+    # seed_categories()
+    # seed_subcategories()
+    # seed_products()
+
 
 def get_products_by_category(category_id):
     products = get_products()
@@ -112,20 +124,6 @@ def get_product_categories(product):
     
     return category_name, subcategory_name
 
-# def get_categories():
-#     conn = get_db_connection()
-#     categories = conn.execute('SELECT * FROM categories').fetchall()
-#     categories = [dict(p) for p in categories]
-#     conn.close()
-#     return categories
-
-# def get_subcategories():
-#     conn = get_db_connection()
-#     subcategories = conn.execute('SELECT * FROM subcategories').fetchall()
-#     subcategories = [dict(p) for p in subcategories]
-#     conn.close()
-#     return subcategories
-
 def get_category_name(category_id):
     """Отримує назву категорії за її id"""
     conn = get_db_connection() 
@@ -161,5 +159,43 @@ def delete_order(order_id):
     conn = get_db_connection()
     conn.execute('DELETE FROM order_items WHERE order_id = ?', (order_id,))
     conn.execute('DELETE FROM orders WHERE id = ?', (order_id,))
+    conn.commit()
+    conn.close()
+
+def get_product_details(product_id):
+    """Отримує детальну інформацію про продукт за його ID"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Отримуємо інформацію про продукт
+    cursor.execute('SELECT * FROM products WHERE id = ?', (product_id,))
+    product = cursor.fetchone()
+    
+    if not product:
+        conn.close()
+        return None
+    
+    # Отримуємо категорію та підкатегорію
+    category_name, subcategory_name = get_product_categories(dict(product))
+    
+    # Отримуємо відгуки про продукт
+    cursor.execute('SELECT * FROM feedback WHERE product_id = ?', (product_id,))
+    feedback_list = cursor.fetchall()
+    
+    conn.close()
+    
+    # Перетворюємо результати в словники
+    product_dict = dict(product)
+    product_dict['category_name'] = category_name
+    product_dict['subcategory_name'] = subcategory_name
+    product_dict['feedback'] = [dict(f) for f in feedback_list]
+    
+    return product_dict
+
+def add_product_feedback(product_id, name, email, message):
+    """Додає відгук до продукту"""
+    conn = get_db_connection()
+    conn.execute('INSERT INTO feedback (product_id, name, email, message, date) VALUES (?, ?, ?, ?, ?)',
+                 (product_id, name, email, message, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     conn.commit()
     conn.close()
