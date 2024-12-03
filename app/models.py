@@ -74,6 +74,12 @@ def get_orders():
     conn.close()
     return orders
 
+def get_users():
+    conn = get_db_connection()
+    orders = conn.execute('SELECT * FROM users').fetchall()
+    conn.close()
+    return orders
+
 def get_all_categories_with_subcategories():
     """Отримує всі категорії з їх підкатегоріями"""
     conn = get_db_connection()
