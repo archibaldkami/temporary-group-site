@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Додати користувача</h1>
+<form method="POST">
+    <input type="text" name="name" required placeholder="Ім'я">
+    <input type="email" name="email" required placeholder="Email">
+    <input type="tel" name="phone" required placeholder="Телефон">
+    <input type="text" name="address" required placeholder="Адреса">
+    <input type="password" name="password" required placeholder="Пароль">
+    <select name="role" required>
+        <option value="buyer">Покупець</option>
+        <option value="seller">Продавець</option>
+        <option value="admin">Адмін</option>
+    </select>
+    <button type="submit">Додати</button>
+</form>
+{% endblock %}

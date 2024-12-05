@@ -17,6 +17,7 @@ def seed_products():
     conn.executemany('INSERT INTO products (name, price, image, category_id, subcategory_id) VALUES (?, ?, ?, ?, ?)', products)
     conn.commit()
     conn.close()
+    print("Тестові продукти додано до бази даних.")
 
 def seed_subcategories():
     init_db()  # Спочатку ініціалізуємо базу даних
@@ -36,6 +37,8 @@ def seed_subcategories():
     # conn.execute('DELETE FROM subcategories WHERE id = ?', (id,))
     conn.commit()
     conn.close()
+    print("Тестові підкатегорії додано до бази даних.")
+    
 
 def seed_categories():
     init_db()  # Спочатку ініціалізуємо базу даних
@@ -54,6 +57,7 @@ def seed_categories():
         conn.execute('INSERT INTO categories (name) VALUES (?)', i)
     conn.commit()
     conn.close()
+    print("Тестові категорії додано до бази даних.")
 
 if __name__ == '__main__':
     seed_categories()

@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import os
 from models import get_products_list, add_order, get_products,\
       get_products_by_category, get_products_by_subcategory, get_all_categories_with_subcategories, get_product_categories, \
-      get_category_name, get_subcategory_name
+      add_product_feedback, get_product_details, get_db_connection
 
 shop_bp = Blueprint('shop', __name__)
 
@@ -109,34 +109,34 @@ def checkout():
     session['cart'] = {}
     return redirect(url_for('shop.shop'))
 
-@shop_bp.route('/favorite/add/<int:product_id>')
-def add_to_favorite(product_id):
+@shop_bp.route('/wishlist/add/<int:product_id>')
+def add_to_wishlist(product_id):
     products = get_products()
     product = next((p for p in products if p['id'] == product_id), None)
     if product:
-        favorite = session.get('favorite', {})
-        if str(product_id) not in favorite:
-            favorite[str(product_id)] = {
+        wishlist = session.get('wishlist', {})
+        if str(product_id) not in wishlist:
+            wishlist[str(product_id)] = {
                 'id': product_id,
                 'name': product['name'],
                 'price': product['price'],
                 'image': product['image']
             }
-        session['favorite'] = favorite
+        session['wishlist'] = wishlist
     return redirect(url_for('shop.shop'))
 
-@shop_bp.route('/favorite/remove/<int:product_id>')
-def remove_from_favorite(product_id):
-    favorite = session.get('favorite', {})
-    favorite.pop(str(product_id), None)
-    session['favorite'] = favorite
-    return redirect(url_for('shop.favorite'))
+@shop_bp.route('/wishlist/remove/<int:product_id>')
+def remove_from_wishlist(product_id):
+    wishlist = session.get('wishlist', {})
+    wishlist.pop(str(product_id), None)
+    session['wishlist'] = wishlist
+    return redirect(url_for('shop.wishlist'))
 
-@shop_bp.route('/favorite')
-def favorite():
-    favorite = session.get('favorite', {})
+@shop_bp.route('/wishlist')
+def wishlist():
+    wishlist = session.get('wishlist', {})
     products = []
-    for product_id, details in favorite.items():
+    for product_id, details in wishlist.items():
         product = details.copy()
         # Додаємо URL зображення
         image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
@@ -145,4 +145,55 @@ def favorite():
         else:
             product['image_url'] = url_for('static', filename='images/placeholder.jpg')
         products.append(product)
-    return render_template('favorite.html', products=products)
+    return render_template('wishlist.html', products=products)
+
+# @shop_bp.route('/product/<int:product_id>')
+# def product_details(product_id):
+#     product = get_product_details(product_id)
+    
+#     if not product:
+#         return "Продукт не знайдений", 404
+    
+#     # Додаємо URL зображення
+#     image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
+#     if os.path.exists(image_path):
+#         product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
+#     else:
+#         product['image_url'] = url_for('static', filename='images/placeholder.jpg')
+    
+#     return render_template('product_details.html', product=product)
+
+@shop_bp.route('/product/<int:product_id>')
+def product_details(product_id):
+    product = get_product_details(product_id)
+    
+    if not product:
+        return "Продукт не знайдений", 404
+    
+    # Додаємо URL зображення
+    image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
+    if os.path.exists(image_path):
+        product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
+    else:
+        product['image_url'] = url_for('static', filename='images/placeholder.jpg')
+    
+    # Перевіряємо, чи авторизований користувач
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Отримання інформації про користувача
+    if 'user_id' in session:
+        cursor.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
+        user = cursor.fetchone()
+        conn.close()
+        return render_template('product_details.html', product=product, user=user)
+    return render_template('product_details.html', product=product)
+
+@shop_bp.route('/product/<int:product_id>/feedback', methods=['POST'])
+def add_feedback(product_id):
+    name = request.form['name']
+    email = request.form['email']
+    message = request.form['message']
+    
+    add_product_feedback(product_id, name, email, message)
+    return redirect(url_for('shop.product_details', product_id=product_id))

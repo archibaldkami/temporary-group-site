@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "base.html" %}
 
 {% block title %}Головна{% endblock %}
@@ -96,3 +97,103 @@
     </div>
 </div>
 {% endblock %}
+=======
+{% extends "base.html" %}
+
+{% block title %}Головна{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center">
+    <!-- Пошук -->
+    <div class="my-[10px]">
+        <form action="{{ url_for('shop.shop') }}" method="GET" class="space-y-2">
+            <input type="text" 
+                   name="search" 
+                   value="{{ request.args.get('search', '') }}"
+                   placeholder="Search" 
+                   class="px-10 py-3 border border-gray-300 rounded-full bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-[480px] h-[58px]">
+            {% if request.args.get('category') %}
+            <input type="hidden" name="category" value="{{ request.args.get('category') }}">
+            {% endif %}
+            {% if request.args.get('subcategory') %}
+            <input type="hidden" name="subcategory" value="{{ request.args.get('subcategory') }}">
+            {% endif %}
+        </form>
+    </div>
+
+    <ul class="space-y-2">
+        {% for category in categories %}
+            <li>
+                <a href="{{ url_for('shop.shop', category=category.id) }}" 
+                   class="font-semibold {% if selected_category == category.id %}text-blue-600{% else %}text-black{% endif %} hover:text-blue-600">
+                    {{ category.name }}
+                </a>
+                {% if category.subcategories %}
+                <ul class="ml-4 space-y-1">
+                    {% for subcategory in category.subcategories %}
+                    <li class="text-sm text-gray-600">
+                        <a href="{{ url_for('shop.shop', category=category.id, subcategory=subcategory.id) }}"
+                           class="hover:text-blue-600 {% if selected_subcategory == subcategory.id %}text-blue-600{% endif %}">
+                            {{ subcategory.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+        {% endfor %}   
+    </ul>
+</div>
+
+<!-- Прямокутник -->
+<div class="w-full h-[400px] bg-black flex shadow-lg mt-8 ">
+    <!-- Лівий блок -->
+    <div class="flex-1 flex items-center justify-center bg-[rgba(239,239,239,255)] rounded-l-full">
+        <div class="flex space-x-[100px]">
+
+            <!-- Перший контейнер -->
+            <div class="relative h-[262px] w-[182px] bg-[rgba(239,239,239,255)]">
+                <!-- Верхній блок -->
+                <div class="absolute top-0 left-0 h-[200px] w-[141px] bg-[rgba(181,181,181,255)]"></div>
+                <!-- Центральний блок -->
+                <div class="absolute top-[31px] left-[20px] h-[200px] w-[141px] bg-[rgba(221,221,221,255)]"></div>
+                <!-- Нижній блок -->
+                <div class="absolute bottom-0 right-0 h-[200px] w-[141px] bg-white"></div>
+            </div>
+
+            <!-- Другий контейнер -->
+            <div class="relative h-[262px] w-[182px] bg-[rgba(239,239,239,255)]">
+                <!-- Верхній блок -->
+                <div class="absolute top-0 left-0 h-[200px] w-[141px] bg-[rgba(181,181,181,255)]"></div>
+                <!-- Центральний блок -->
+                <div class="absolute top-[31px] left-[20px] h-[200px] w-[141px] bg-[rgba(221,221,221,255)]"></div>
+                <!-- Нижній блок -->
+                <div class="absolute bottom-0 right-0 h-[200px] w-[141px] bg-white"></div>
+            </div>
+            
+        </div>
+      </div>
+
+    <!-- Правий блок (Season hits) -->
+    <div class="flex-1 bg-[rgba(239,239,239,255)]">
+        <div class="flex flex-col items-center h-full bg-black rounded-l-full">
+
+            <!-- Надпис -->
+            <div class="h-[36px] w-[180px] bg-white flex items-center justify-center mt-[26px] rounded-full">
+                <p class="text-lg text-black font-semibold">Season Hits</p>
+            </div>
+
+            <div class="mt-[50px] relative h-[208px] w-[480px] bg-black">
+                <!-- Лівий блок -->
+                <div class="absolute top-0 left-0 h-[200px] w-[141px] bg-white"></div>
+                <!-- Центральний блок -->
+                <div class="absolute top-0 left-[170px] h-[200px] w-[141px] bg-[rgba(200,200,200,255)]"></div>
+                <!-- Правий блок -->
+                <div class="absolute top-0 right-0 h-[200px] w-[141px] bg-[rgba(150,150,150,255)]"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+>>>>>>> A2

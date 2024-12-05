@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Профіль користувача</h1>
+    
+    <form method="POST">
+        <div>
+            <label>Ім'я</label>
+            <input type="text" name="name" value="{{ user.name }}" required>
+        </div>
+        <div>
+            <label>Email</label>
+            <input type="email" value="{{ user.email }}" readonly>
+        </div>
+        <div>
+            <label>Телефон</label>
+            <input type="tel" name="phone" value="{{ user.phone }}">
+        </div>
+        <div>
+            <label>Адреса</label>
+            <input type="text" name="address" value="{{ user.address }}">
+        </div>
+        <div>
+            <strong>Роль:</strong> {{ user.role }}
+        </div>
+        
+        {% if user.role == 'admin' %}
+        <div>
+            <a href="{{ url_for('admin.admin') }}" class="btn btn-primary">Адмін-панель</a>
+        </div>
+        {% endif %}
+        
+        {% if user.role == 'seller' %}
+        <div>
+            <h2>Мої товари</h2>
+            {% for product in seller_products %}
+                <div>
+                    {{ product.name }} - {{ product.price }} грн
+                    <a href="{{ url_for('seller.edit_product', product_id=product.id) }}">Редагувати</a>
+                </div>
+            {% endfor %}
+            <a href="{{ url_for('seller.dashboard') }}" class="btn btn-primary">Панель продавця</a>
+        </div>
+        {% endif %}
+        
+        {% if user.role == 'buyer' %}
+        <div>
+            <h2>Мої замовлення</h2>
+            {% for order in orders %}
+                <div>
+                    Замовлення №{{ order.id }} - {{ order.total_price }} грн, Статус: {{ order.status }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <button type="submit">Оновити профіль</button>
+    </form>
+    <div>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-seconprimarydary">Вийти з аккаунту</a>
+    </div>
+</div>
+{% endblock %}

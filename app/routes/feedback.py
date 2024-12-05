@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, session
 from models import get_db_connection
 
 feedback_bp = Blueprint('feedback', __name__)
@@ -17,5 +17,12 @@ def feedback():
         conn.close()
         
         return jsonify({"status": "success"}), 200
-    
+
+    if 'user_id' in session:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
+        user = cursor.fetchone()
+        conn.close()
+        return render_template('feedback.html', user=user)
     return render_template('feedback.html')

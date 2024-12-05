@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Редагування користувача</h1>
+<form method="POST">
+    <input type="text" name="name" value="{{ user.name }}" required>
+    <input type="email" name="email" value="{{ user.email }}" required>
+    <input type="tel" name="phone" value="{{ user.phone }}" required>
+    <input type="text" name="address" value="{{ user.address }}" required>
+    <select name="role" required>
+        <option value="buyer" {% if user.role == 'buyer' %}selected{% endif %}>Покупець</option>
+        <option value="seller" {% if user.role == 'seller' %}selected{% endif %}>Продавець</option>
+        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Адмін</option>
+    </select>
+    <button type="submit">Оновити</button>
+</form>
+{% endblock %}

@@ -81,11 +81,19 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
             {% for product in products %}
             <div class="bg-white p-4 shadow-md rounded-lg">
-                <img src="{{ product.image_url }}" 
-                     alt="{{ product.name }}" 
-                     class="w-full h-80 object-cover mb-2"
-                     onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'">
-                <h2 class="text-xl font-semibold">{{ product.name }}</h2>
+                <a href="{{ url_for('shop.product_details', product_id=product.id) }}">
+                    <img src="{{ product.image_url }}" 
+                         alt="{{ product.name }}" 
+                         class="w-full h-80 object-cover mb-2"
+                         onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'">
+                </a>
+                <h2 class="text-xl font-semibold">
+                    <a href="{{ url_for('shop.product_details', product_id=product.id) }}">
+                        {{ product.name }}
+                    </a>
+                </h2>
+            
+
                 <div class="text-sm text-gray-500">
                     <p>
                         <a href="{{ url_for('shop.shop', category=product.category) }}" 
@@ -107,7 +115,7 @@
                         data-url="{{ url_for('shop.add_to_cart_ajax', product_id=product.id) }}">
                         Купити
                     </a>
-                    <a href="{{ url_for('shop.add_to_favorite', product_id=product.id) }}" 
+                    <a href="{{ url_for('shop.add_to_wishlist', product_id=product.id) }}" 
                         class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-md text-center hover:bg-gray-600 transition-colors">
                         У бажане
                     </a>

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Редагування товару</h1>
+    <form action="{{ url_for('seller.edit_product', product_id=product.id) }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Назва товару</label>
+            <input type="text" name="name" class="form-control" value="{{ product.name }}" required minlength="3" maxlength="100">
+        </div>
+
+        <div class="form-group">
+            <label>Ціна</label>
+            <input type="number" name="price" class="form-control" value="{{ product.price }}" required min="0" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label>Категорія</label>
+            <select name="category_id" class="form-control" required>
+                <option value="">Оберіть категорію</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if category.id == product.category_id %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Підкатегорія</label>
+            <select name="subcategory_id" class="form-control" required>
+                <option value="">Оберіть підкатегорію</option>
+                {% for subcategory in subcategories %}
+                <option value="{{ subcategory.id }}" {% if subcategory.id == product.subcategory_id %}selected{% endif %}>
+                    {{ subcategory.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Поточне зображення</label>
+            <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}" style="max-width: 200px;">
+        </div>
+
+        <div class="form-group">
+            <label>Змінити зображення</label>
+            <input type="file" name="image" class="form-control-file" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Оновити товар</button>
+    </form>
+</div>
+{% endblock %}
