@@ -6,7 +6,11 @@ python/
 # C extensions
 *.so
 
+# Database
+db.sqlite
+
 # Distribution / packaging
+.python/
 .Python
 build/
 develop-eggs/
