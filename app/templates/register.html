@@ -1,18 +1,88 @@
 {% extends 'base.html' %}
 {% block content %}
-<form method="POST">
-    <input type="text" name="name" required placeholder="ПІБ">
-    <input type="email" name="email" required placeholder="Email">
-    <input type="tel" name="phone" placeholder="Телефон">
-    <input type="text" name="address" placeholder="Адреса">
-    <input type="password" name="password" required placeholder="Пароль">
-    
-    <select name="role" required>
-        <option value="">Оберіть роль</option>
-        <option value="buyer">Покупець</option>
-        <option value="seller">Продавець</option>
-    </select>
-    
-    <button type="submit">Зареєструватись</button>
-</form>
+<div class="container mx-auto p-6 bg-gray-100 min-h-screen flex items-center justify-center">
+    <!-- Сіра підложка -->
+    <div class="w-full max-w-3xl bg-gray-200 p-12 rounded-3xl shadow-md">
+        <!-- Форма реєстрації -->
+        <div class="w-full max-w-xl bg-white p-8 rounded-3xl shadow-lg mx-auto">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Реєстрація</h1>
+            <form method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">ПІБ</label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        required 
+                        placeholder="Ваше повне ім'я" 
+                        class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    >
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        required 
+                        placeholder="Ваш email" 
+                        class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    >
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Телефон</label>
+                    <input 
+                        type="tel" 
+                        name="phone" 
+                        placeholder="Ваш телефон" 
+                        class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    >
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Адреса</label>
+                    <input 
+                        type="text" 
+                        name="address" 
+                        placeholder="Ваша адреса" 
+                        class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    >
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Пароль</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        required 
+                        placeholder="Ваш пароль" 
+                        class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    >
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Оберіть роль</label>
+                    <select 
+                        name="role" 
+                        required 
+                        class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    >
+                        <option value="">Оберіть роль</option>
+                        <option value="buyer">Покупець</option>
+                        <option value="seller">Продавець</option>
+                    </select>
+                </div>
+                <button 
+                    type="submit" 
+                    class="w-full bg-gray-800 text-white py-3 rounded-full hover:bg-gray-700 transition"
+                >
+                    Зареєструватись
+                </button>
+            </form>
+            <div class="mt-6 text-center">
+                <a 
+                    href="{{ url_for('auth.login') }}" 
+                    class="inline-block text-gray-600 hover:underline"
+                >
+                    Вже маєте акаунт? Увійдіть
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
