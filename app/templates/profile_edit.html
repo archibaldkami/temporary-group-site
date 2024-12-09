@@ -1,31 +1,34 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container profile-edit-page">
-    <h1>Редагування профілю</h1>
-    
-    <form method="POST" class="profile-edit-form">
-        <div class="form-group">
-            <label>Ім'я</label>
-            <input type="text" name="name" value="{{ user.name }}" required class="form-control">
-        </div>
-        
-        <div class="form-group">
-            <label>Email (не можна змінити)</label>
-            <input type="email" value="{{ user.email }}" disabled class="form-control">
-        </div>
-        
-        <div class="form-group">
-            <label>Телефон</label>
-            <input type="tel" name="phone" value="{{ user.phone or '' }}" class="form-control">
-        </div>
-        
-        <div class="form-group">
-            <label>Адреса</label>
-            <input type="text" name="address" value="{{ user.address or '' }}" class="form-control">
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Зберегти зміни</button>
-        <a href="{{ url_for('auth.profile') }}" class="btn btn-secondary">Скасувати</a>
-    </form>
-</div>
-{% endblock %}
+<div class="container mx-auto min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+    <!-- Панель редагування профілю -->
+    <div class="w-full max-w-3xl bg-white p-10 rounded-3xl shadow-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Редагування профілю</h1>
+        <form method="POST" class="space-y-6">
+            <!-- Ім'я -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Ім'я</label>
+                <input 
+                    type="text" 
+                    name="name" 
+                    value="{{ user.name }}" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400" 
+                    placeholder="Введіть ваше ім'я"
+                >
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Email (не можна змінити)</label>
+                <input 
+                    type="email" 
+                    value="{{ user.email }}" 
+                    disabled 
+                    class="w-full p-4 border border-gray-300 rounded-full bg-gray-100 text-gray-500"
+                >
+            </div>
+
+            <!-- Телефон -->
+            <div>
+                <label class="block text-gray-700 font
