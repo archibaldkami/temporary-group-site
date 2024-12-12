@@ -33,7 +33,7 @@
         </table>
 
         <h2 class="text-2xl font-bold mb-4">Змінити статус замовлення</h2>
-        <form action="{{ url_for('seller.update_order', order_id=order['id']) }}" method="post" class="mb-6">
+        <form action="{{ url_for('admin.update_order', order_id=order['id']) }}" method="post" class="mb-6">
             <select name="status" class="p-2 border border-gray-400 rounded mr-4">
                 <option value="Нове" {% if order['status'] == 'Нове' %}selected{% endif %}>Нове</option>
                 <option value="В обробці" {% if order['status'] == 'В обробці' %}selected{% endif %}>В обробці</option>
@@ -44,7 +44,7 @@
             <button type="submit" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Оновити статус</button>
         </form>
 
-        <a href="{{ url_for('seller.dashboard') }}" class="text-black underline hover:text-gray-800">Повернутися до списку замовлень</a>
+        <a href="{{ url_for('admin.admin') }}" class="text-black underline hover:text-gray-800">Повернутися до списку замовлень</a>
     </div>
 </div>
 {% endblock %}

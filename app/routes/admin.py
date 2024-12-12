@@ -178,7 +178,7 @@ def delete_feedback(id):
 @role_required(['admin'])
 def order_details(order_id):
     order, items = get_order_details(order_id)
-    return render_template('order_details.html', order=order, items=items)
+    return render_template('admin_order_details.html', order=order, items=items)
 
 @admin_bp.route('/admin/update_order_status/<int:order_id>', methods=['POST'])
 @role_required(['admin'])
