@@ -61,6 +61,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.dataset.productId;
+
+            fetch(`/cart/remove/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // alert(data.message);
+                    location.reload(); // Оновлення сторінки після видалення
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+
 
 
 // Отримуємо елементи категорії та підкатегорії
@@ -93,7 +119,5 @@ categorySelect.addEventListener('change', function () {
 
     // Встановлюємо початкове значення "Оберіть підкатегорію"
     subcategorySelect.value = "";
-
-    // Деактивуємо підкатегорії, якщо немає доступних варіантів
     subcategorySelect.disabled = filteredSubcategories.length === 0;
 });
