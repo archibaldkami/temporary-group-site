@@ -32,7 +32,7 @@
                     <input 
                         type="tel" 
                         name="phone" 
-                        placeholder="Ваш телефон" 
+                        placeholder="Ваш телефон ( За бажанням )" 
                         class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
                     >
                 </div>
@@ -41,7 +41,7 @@
                     <input 
                         type="text" 
                         name="address" 
-                        placeholder="Ваша адреса" 
+                        placeholder="Ваша адреса ( За бажанням )" 
                         class="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
                     >
                 </div>
@@ -77,9 +77,9 @@
             <div class="mt-6 text-center">
                 <a 
                     href="{{ url_for('auth.login') }}" 
-                    class="inline-block text-gray-600 hover:underline"
+                    class="inline-block text-center text-gray-600 hover:underline"
                 >
-                    Вже маєте акаунт? Увійдіть
+                    Вже маєте акаунт?<br>Увійдіть
                 </a>
             </div>
         </div>

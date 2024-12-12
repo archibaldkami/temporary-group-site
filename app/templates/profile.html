@@ -46,7 +46,16 @@
                     >
                 </div>
                 <div class="text-center">
-                    <strong class="text-gray-700">Роль:</strong> {{ user.role }}
+                    <strong class="text-gray-700">Роль:</strong>
+                    {% if user.role == "admin" %}
+                        Адміністратор
+                    {% elif user.role == "buyer" %}
+                        Покупець
+                    {% elif user.role == "seller" %}
+                        Продавець
+                    {% else %}
+                        Невідома роль
+                    {% endif %}
                 </div>
 
                 {% if user.role == 'admin' %}

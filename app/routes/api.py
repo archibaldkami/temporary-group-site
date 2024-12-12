@@ -22,13 +22,13 @@ def get_all_products():
         return jsonify({'error': str(e)}), 500
 
 # # Users endpoints
-# @api_bp.route('/api/users', methods=['GET'])
-# def get_all_users():
-#     try:
-#         orders = get_users()
-#         return jsonify([dict(order) for order in orders]), 200
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
+@api_bp.route('/api/users', methods=['GET'])
+def get_all_users():
+    try:
+        orders = get_users()
+        return jsonify([dict(order) for order in orders]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Orders endpoints
 @api_bp.route('/api/orders', methods=['GET'])

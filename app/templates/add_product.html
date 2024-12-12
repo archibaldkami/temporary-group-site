@@ -31,6 +31,7 @@
         <div class="form-group">
             <label class="block text-gray-700 font-medium">Категорія</label>
             <select 
+                id="category" 
                 name="category_id" 
                 class="form-control w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" 
                 required
@@ -45,13 +46,16 @@
         <div class="form-group">
             <label class="block text-gray-700 font-medium">Підкатегорія</label>
             <select 
+                id="subcategory" 
                 name="subcategory_id" 
                 class="form-control w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" 
                 required
             >
                 <option value="">Оберіть підкатегорію</option>
                 {% for subcategory in subcategories %}
-                <option value="{{ subcategory.id }}">{{ subcategory.name }}</option>
+                <option value="{{ subcategory.id }}" data-category="{{ subcategory.category_id }}">
+                    {{ subcategory.name }}
+                </option>
                 {% endfor %}
             </select>
         </div>

@@ -58,3 +58,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+
+
+
+
+// Отримуємо елементи категорії та підкатегорії
+const categorySelect = document.getElementById('category');
+const subcategorySelect = document.getElementById('subcategory');
+const allSubcategories = Array.from(subcategorySelect.options);
+
+// Обробник зміни категорії
+categorySelect.addEventListener('change', function () {
+    const selectedCategory = this.value;
+
+    // Очищаємо список підкатегорій, залишаючи лише "Оберіть підкатегорію"
+    subcategorySelect.innerHTML = '<option value="">Оберіть підкатегорію</option>';
+
+    // Фільтруємо підкатегорії за обраною категорією
+    const filteredSubcategories = allSubcategories.filter(option => 
+        option.dataset.category === selectedCategory
+    );
+
+    // Додаємо відфільтровані підкатегорії без повторів
+    filteredSubcategories.forEach(option => {
+        const exists = Array.from(subcategorySelect.options).some(
+            existingOption => existingOption.value === option.value
+        );
+
+        if (!exists) {
+            subcategorySelect.appendChild(option);
+        }
+    });
+
+    // Встановлюємо початкове значення "Оберіть підкатегорію"
+    subcategorySelect.value = "";
+
+    // Деактивуємо підкатегорії, якщо немає доступних варіантів
+    subcategorySelect.disabled = filteredSubcategories.length === 0;
+});
