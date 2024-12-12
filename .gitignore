@@ -7,7 +7,7 @@ python/
 *.so
 
 # Database
-db.sqlite
+
 
 # Distribution / packaging
 .python/
