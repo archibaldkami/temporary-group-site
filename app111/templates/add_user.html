@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mx-auto min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+    <!-- Панель додавання користувача -->
+    <div class="w-full max-w-2xl bg-white p-10 rounded-3xl shadow-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Додати користувача</h1>
+        
+        <form method="POST" class="space-y-6">
+            <!-- Ім'я -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Ім'я</label>
+                <input 
+                    type="text" 
+                    name="name" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400" 
+                    placeholder="Введіть ім'я"
+                >
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Email</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400" 
+                    placeholder="Введіть email"
+                >
+            </div>
+
+            <!-- Телефон -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Телефон</label>
+                <input 
+                    type="tel" 
+                    name="phone" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400" 
+                    placeholder="Введіть телефон"
+                >
+            </div>
+
+            <!-- Адреса -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Адреса</label>
+                <input 
+                    type="text" 
+                    name="address" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400" 
+                    placeholder="Введіть адресу"
+                >
+            </div>
+
+            <!-- Пароль -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Пароль</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400" 
+                    placeholder="Введіть пароль"
+                >
+            </div>
+
+            <!-- Роль -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Роль</label>
+                <select 
+                    name="role" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                >
+                    <option value="buyer">Покупець</option>
+                    <option value="seller">Продавець</option>
+                    <option value="admin">Адмін</option>
+                </select>
+            </div>
+
+            <!-- Кнопка -->
+            <button 
+                type="submit" 
+                class="w-full py-3 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition text-lg font-medium"
+            >
+                Додати
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

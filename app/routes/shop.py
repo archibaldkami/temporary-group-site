@@ -87,15 +87,6 @@ def add_to_cart_ajax(product_id):
 def cart():
     cart = session.get('cart', {})
     total = sum(item['price'] * item['quantity'] for item in cart.values())
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    if 'user_id' in session:
-        cursor.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
-        user = cursor.fetchone()
-        conn.close()
-        return render_template('cart.html', cart=cart, total=total, user=user)
     return render_template('cart.html', cart=cart, total=total)
 
 @shop_bp.route('/cart/remove/<int:product_id>', methods=['POST'])
@@ -134,23 +125,6 @@ def add_to_wishlist(product_id):
         session['wishlist'] = wishlist
     return redirect(url_for('shop.shop'))
 
-@shop_bp.route('/wishlist/add_ajax/<int:product_id>', methods=['POST'])
-def add_to_wishlist_ajax(product_id):
-    products = get_products()
-    product = next((p for p in products if p['id'] == product_id), None)
-    if product:
-        wishlist = session.get('wishlist', {})
-        if str(product_id) not in wishlist:
-            wishlist[str(product_id)] = {
-                'id': product_id,
-                'name': product['name'],
-                'price': product['price'],
-                'image': product['image']
-            }
-        session['wishlist'] = wishlist
-        return {"status": "success", "message": "Product added to wishlist"}
-    return {"status": "error", "message": "Product not found"}, 404
-
 @shop_bp.route('/wishlist/remove/<int:product_id>')
 def remove_from_wishlist(product_id):
     wishlist = session.get('wishlist', {})
@@ -173,19 +147,37 @@ def wishlist():
         products.append(product)
     return render_template('wishlist.html', products=products)
 
+# @shop_bp.route('/product/<int:product_id>')
+# def product_details(product_id):
+#     product = get_product_details(product_id)
+    
+#     if not product:
+#         return "Продукт не знайдений", 404
+    
+#     # Додаємо URL зображення
+#     image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
+#     if os.path.exists(image_path):
+#         product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
+#     else:
+#         product['image_url'] = url_for('static', filename='images/placeholder.jpg')
+    
+#     return render_template('product_details.html', product=product)
+
 @shop_bp.route('/product/<int:product_id>')
 def product_details(product_id):
     product = get_product_details(product_id)
     
     if not product:
         return "Продукт не знайдений", 404
-
+    
+    # Додаємо URL зображення
     image_path = os.path.join(current_app.static_folder, 'images', os.path.basename(product['image']))
     if os.path.exists(image_path):
         product['image_url'] = url_for('static', filename=f"images/{os.path.basename(product['image'])}")
     else:
         product['image_url'] = url_for('static', filename='images/placeholder.jpg')
     
+    # Перевіряємо, чи авторизований користувач
     conn = get_db_connection()
     cursor = conn.cursor()
     

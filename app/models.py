@@ -1,5 +1,4 @@
 import sqlite3
-import os
 from datetime import datetime
 # from seed_data import *
 
@@ -10,6 +9,7 @@ def get_db_connection():
 
 def init_db():
     conn = get_db_connection()
+    # conn.execute('CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, message TEXT)')
     conn.execute('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)')
     conn.execute('CREATE TABLE IF NOT EXISTS subcategories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, category_id INTEGER, FOREIGN KEY (category_id) REFERENCES categories (id))')
     conn.execute('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL, image TEXT, seller_id INTEGER DEFAULT NULL, category_id INTEGER, subcategory_id INTEGER, FOREIGN KEY (category_id) REFERENCES categories (id), FOREIGN KEY (subcategory_id) REFERENCES subcategories (id), FOREIGN KEY (seller_id) REFERENCES users(id))')
@@ -39,7 +39,7 @@ def get_products_by_subcategory(subcategory_id):
     products = get_products()
     return [p for p in products if p['subcategory'] == subcategory_id]
 
-def get_products_list() -> list[dict]:
+def get_products_list() -> list[dict]: 
     """Get list with item dicts"""
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -84,16 +84,16 @@ def get_all_categories_with_subcategories():
     """Отримує всі категорії з їх підкатегоріями"""
     conn = get_db_connection()
     cursor = conn.cursor()
-
+    
     # Отримуємо всі категорії
     cursor.execute('SELECT id, name FROM categories')
     categories = [dict(cat) for cat in cursor.fetchall()]
-
+    
     # Для кожної категорії отримуємо її підкатегорії
     for category in categories:
         cursor.execute('SELECT id, name FROM subcategories WHERE category_id = ?', (category['id'],))
         category['subcategories'] = [dict(sub) for sub in cursor.fetchall()]
-
+    
     conn.close()
     return categories
 
@@ -101,23 +101,23 @@ def get_product_categories(product):
     """Отримує інформацію про категорію та підкатегорію продукту"""
     conn = get_db_connection()
     cursor = conn.cursor()
-
+    
     # Отримуємо інформацію про категорію
     cursor.execute('SELECT name FROM categories WHERE id = ?', (product['category_id'],))
     category_result = cursor.fetchone()
     category_name = dict(category_result)['name'] if category_result else "Невідома категорія"
-
+    
     # Отримуємо інформацію про підкатегорію
     cursor.execute('''
-        SELECT s.name as subcategory_name, c.name as category_name
-        FROM subcategories s
-        JOIN categories c ON s.category_id = c.id
+        SELECT s.name as subcategory_name, c.name as category_name 
+        FROM subcategories s 
+        JOIN categories c ON s.category_id = c.id 
         WHERE s.id = ?
     ''', (product['subcategory_id'],))
     subcategory_result = cursor.fetchone()
-
+    
     conn.close()
-
+    
     if subcategory_result:
         subcategory_result = dict(subcategory_result)
         # Перевіряємо, чи підкатегорія належить до правильної категорії
@@ -127,12 +127,12 @@ def get_product_categories(product):
             subcategory_name = "Невідповідна підкатегорія"
     else:
         subcategory_name = "Невідома підкатегорія"
-
+    
     return category_name, subcategory_name
 
 def get_category_name(category_id):
     """Отримує назву категорії за її id"""
-    conn = get_db_connection()
+    conn = get_db_connection() 
     cursor = conn.cursor()
     cursor.execute('SELECT name FROM categories WHERE id = ?', (category_id,))
     result = cursor.fetchone()
@@ -141,7 +141,7 @@ def get_category_name(category_id):
 
 def get_subcategory_name(subcategory_id):
     """Отримує назву підкатегорії за її id"""
-    conn = get_db_connection()
+    conn = get_db_connection() 
     cursor = conn.cursor()
     cursor.execute('SELECT name FROM subcategories WHERE id = ?', (subcategory_id,))
     result = cursor.fetchone()
@@ -172,30 +172,30 @@ def get_product_details(product_id):
     """Отримує детальну інформацію про продукт за його ID"""
     conn = get_db_connection()
     cursor = conn.cursor()
-
+    
     # Отримуємо інформацію про продукт
     cursor.execute('SELECT * FROM products WHERE id = ?', (product_id,))
     product = cursor.fetchone()
-
+    
     if not product:
         conn.close()
         return None
-
+    
     # Отримуємо категорію та підкатегорію
     category_name, subcategory_name = get_product_categories(dict(product))
-
+    
     # Отримуємо відгуки про продукт
     cursor.execute('SELECT * FROM feedback WHERE product_id = ?', (product_id,))
     feedback_list = cursor.fetchall()
-
+    
     conn.close()
-
+    
     # Перетворюємо результати в словники
     product_dict = dict(product)
     product_dict['category_name'] = category_name
     product_dict['subcategory_name'] = subcategory_name
     product_dict['feedback'] = [dict(f) for f in feedback_list]
-
+    
     return product_dict
 
 def add_product_feedback(product_id, name, email, message):

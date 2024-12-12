@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Магазин{% endblock %}
+{% block content %}
+<div class="flex">
+    <!-- Sidebar з категоріями -->
+    <div class="w-64 p-4 bg-gray-200 rounded-lg shadow-md">
+        <!-- Форма пошуку -->
+        <div class="mb-6">
+            <form action="{{ url_for('shop.shop') }}" method="GET" class="space-y-3">
+                <input type="text" 
+                       name="search" 
+                       value="{{ request.args.get('search', '') }}"
+                       placeholder="Пошук товарів..." 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500">
+                {% if request.args.get('category') %}
+                <input type="hidden" name="category" value="{{ request.args.get('category') }}">
+                {% endif %}
+                {% if request.args.get('subcategory') %}
+                <input type="hidden" name="subcategory" value="{{ request.args.get('subcategory') }}">
+                {% endif %}
+                <button type="submit" 
+                        class="w-full bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors">
+                    Пошук
+                </button>
+            </form>
+        </div>
+        <h2 class="text-xl font-bold mb-4">Категорії</h2>
+        <ul>
+            <li class="mb-2">
+                <a href="{{ url_for('shop.shop') }}" 
+                   class="font-semibold {% if not selected_category %}text-black{% endif %} hover:text-gray-700">
+                    Всі товари
+                </a>
+            </li>
+            {% for category in categories %}
+            <li class="mb-2">
+                <a href="{{ url_for('shop.shop', category=category.id) }}" 
+                   class="font-semibold {% if selected_category == category.id %}text-black{% endif %} hover:text-gray-700">
+                    {{ category.name }}
+                </a>
+                {% if category.subcategories %}
+                <ul class="ml-4">
+                    {% for subcategory in category.subcategories %}
+                    <li class="text-sm text-gray-600">
+                        <a href="{{ url_for('shop.shop', category=category.id, subcategory=subcategory.id) }}"
+                           class="hover:text-black {% if selected_subcategory == subcategory.id %}text-black{% endif %}">
+                            {{ subcategory.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Основний контент -->
+    <div class="flex-1 p-6 bg-gray-100 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold">Магазин</h1>
+            {% if search_query %}
+            <p class="text-gray-600">
+                Результати пошуку для: "{{ search_query }}"
+                <a href="{{ url_for('shop.shop', category=request.args.get('category'), subcategory=request.args.get('subcategory')) }}" 
+                   class="ml-2 text-black hover:text-gray-700">
+                    ✕ Очистити
+                </a>
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Показ повідомлення, якщо нічого не знайдено -->
+        {% if products|length == 0 %}
+        <div class="text-center py-8">
+            <p class="text-gray-600 text-lg">Товарів не знайдено.</p>
+        </div>
+        {% else %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+            {% for product in products %}
+            <div class="bg-white p-6 shadow-lg rounded-lg">
+                <a href="{{ url_for('shop.product_details', product_id=product.id) }}">
+                    <img src="{{ product.image_url }}" 
+                         alt="{{ product.name }}" 
+                         class="w-full h-80 object-cover mb-4 rounded-lg"
+                         onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'">
+                </a>
+                <h2 class="text-xl font-semibold">
+                    <a href="{{ url_for('shop.product_details', product_id=product.id) }}" class="hover:text-gray-700">
+                        {{ product.name }}
+                    </a>
+                </h2>
+                <div class="text-sm text-gray-500 mt-2">
+                    <p>
+                        <a href="{{ url_for('shop.shop', category=product.category) }}" 
+                           class="hover:text-black">
+                            Категорія: {{ product.category_name }}
+                        </a>
+                    </p>
+                    <p>
+                        <a href="{{ url_for('shop.shop', category=product.category, subcategory=product.subcategory) }}" 
+                           class="hover:text-black">
+                            Підкатегорія: {{ product.subcategory_name }}
+                        </a>
+                    </p>
+                </div>
+                <p class="text-gray-600 mt-2 font-semibold">{{ product.price }} грн</p>
+                <div class="flex space-x-2 mt-4">
+                    <a href="#" 
+                        class="flex-1 bg-black text-white px-4 py-2 rounded-md text-center hover:bg-gray-800 transition-colors add-to-cart-ajax" 
+                        data-url="{{ url_for('shop.add_to_cart_ajax', product_id=product.id) }}">
+                        Купити
+                    </a>
+                    <a href="#"
+                        class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-md text-center hover:bg-gray-600 transition-colors add-to-wishlist-ajax"
+                        data-url="{{ url_for('shop.add_to_wishlist_ajax', product_id=product.id) }}">
+                        У бажане
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

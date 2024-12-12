@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Панель продавця</h1>
+    
+    <div class="mb-6">
+        <a href="{{ url_for('seller.add_product') }}" class="bg-black text-white py-2 px-4 rounded-full hover:bg-gray-800 transition">Додати новий товар</a>
+    </div>
+
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Мої товари</h2>
+    {% if products %}
+        <div class="overflow-hidden rounded-lg border border-gray-200">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Назва</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Ціна</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Категорія</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Підкатегорія</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Дії</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for product in products %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-4 px-4 text-gray-800">{{ product.name }}</td>
+                        <td class="py-4 px-4 text-gray-800">{{ product.price }} грн</td>
+                        <td class="py-4 px-4 text-gray-800">{{ product.category_id }}</td>
+                        <td class="py-4 px-4 text-gray-800">{{ product.subcategory_id }}</td>
+                        <td class="py-4 px-4">
+                            <a href="{{ url_for('seller.edit_product', product_id=product.id) }}" class="bg-black text-white py-1 px-3 rounded-full text-sm hover:bg-gray-800 transition">Редагувати</a>
+                            <form action="{{ url_for('seller.delete_product', product_id=product.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="bg-black text-white py-1 px-3 rounded-full text-sm hover:bg-gray-800 transition" onclick="return confirm('Ви впевнені?')">Видалити</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-600">У вас ще немає товарів</p>
+    {% endif %}
+
+    <h2 class="text-xl font-semibold text-gray-700 mt-8 mb-4">Замовлення моїх товарів</h2>
+    {% if orders %}
+        <div class="overflow-hidden rounded-lg border border-gray-200">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">ID</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Адреса</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Сума</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Статус</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Дата</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for order in orders %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-4 px-4 text-gray-800">{{ order.id }}</td>
+                        <td class="py-4 px-4 text-gray-800">{{ order.email }}</td>
+                        <td class="py-4 px-4 text-gray-800">{{ order.address }}</td>
+                        <td class="py-4 px-4 text-gray-800">{{ order.total_price }} грн</td>
+                        <td class="py-4 px-4 text-gray-800">{{ order.status }}</td>
+                        <td class="py-4 px-4 text-gray-800">{{ order.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-600">Замовлень ще немає</p>
+    {% endif %}
+</div>
+{% endblock %}

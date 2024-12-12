@@ -30,7 +30,7 @@ def dashboard():
     return render_template('seller_dashboard.html', products=products, orders=orders)
 
 @seller_bp.route('/seller/add_product', methods=['GET', 'POST'])
-@role_required(['seller', 'admin'])
+@role_required(['seller'])
 def add_product():
     if request.method == 'POST':
         name = request.form['name']
@@ -49,6 +49,7 @@ def add_product():
         
         conn = get_db_connection()
         cursor = conn.cursor()
+        
         cursor.execute('''
             INSERT INTO products 
             (name, price, image, category_id, subcategory_id, seller_id) 

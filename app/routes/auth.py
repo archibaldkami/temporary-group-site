@@ -111,9 +111,7 @@ def register():
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
-        if phone == None: phone = ''
         address = request.form['address']
-        if address == None: address = ''
         password = request.form['password']
         role = request.form['role']  # Додаємо вибір ролі
         

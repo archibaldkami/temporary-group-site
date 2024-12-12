@@ -63,3 +63,6 @@ if __name__ == '__main__':
     seed_categories()
     seed_subcategories()
     seed_products()
+    print("Тестові категорії додано до бази даних.")
+    print("Тестові підкатегорії додано до бази даних.")
+    print("Тестові продукти додано до бази даних.")

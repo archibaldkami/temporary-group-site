@@ -27,9 +27,7 @@
             <td class="py-4 px-4">{{ user['role'] }}</td>
             <td class="py-4 px-4">
                 <a href="{{ url_for('admin.edit_user', user_id=user['id']) }}" class="bg-black text-white px-3 py-1 rounded-md hover:bg-gray-800 transition">Редагувати</a>
-                <form action="{{ url_for('admin.delete_user', user_id=user['id']) }}" method="post" class="inline">
-                    <button type="submit" class="bg-black text-white px-3 py-1 rounded-md hover:bg-gray-800 transition ml-2">Видалити</button>
-                </form>
+                <a href="{{ url_for('admin.delete_user', user_id=user['id']) }}" class="bg-black text-white px-3 py-1 rounded-md hover:bg-gray-800 transition ml-2">Видалити</a>
             </td>
         </tr>
         {% endfor %}
@@ -59,9 +57,7 @@
             <td class="py-4 px-4">{{ product['category_id'] }}</td>
             <td class="py-4 px-4">
                 <a href="{{ url_for('admin.edit_product', product_id=product['id']) }}" class="bg-black text-white px-3 py-1 rounded-md hover:bg-gray-800 transition">Редагувати</a>
-                <form action="{{ url_for('admin.delete_product', product_id=product['id']) }}" method="post" class="inline">
-                    <button type="submit" class="bg-black text-white px-3 py-1 rounded-md hover:bg-gray-800 transition ml-2">Видалити</button>
-                </form>
+                <a href="{{ url_for('admin.delete_product', product_id=product['id']) }}" class="bg-black text-white px-3 py-1 rounded-md hover:bg-gray-800 transition ml-2">Видалити</a>
             </td>
         </tr>
         {% endfor %}
@@ -89,7 +85,7 @@
                     <td class="py-4 px-4">{{ order['email'] }}</td>
                     <td class="py-4 px-4">{{ order['total_price'] }} грн</td>
                     <td class="py-4 px-4">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">{{ order['status'] }}</span>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ order_status_class(order['status']) }}">{{ order['status'] }}</span>
                     </td>
                     <td class="py-4 px-4">{{ order['date'] }}</td>
                     <td class="py-4 px-4">

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Список бажаного{% endblock %}
+{% block content %}
+<div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Shopping Card Section -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-xl font-semibold mb-6">Wishlist</h2>
+                    
+                    <div class="space-y-4" id="wishlist-items">
+                        {% if products|length == 0 %}
+                        <div class="text-center py-8">
+                            <p class="text-gray-600 text-lg">Ваш список бажаного порожній.</p>
+                        </div>
+                        {% else %}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {% for product in products %}
+                            <div class="bg-white p-4 shadow-md rounded-lg relative group">
+                                <img src="{{ product.image_url }}" 
+                                     alt="{{ product.name }}" 
+                                     class="w-full h-80 object-cover mb-2"
+                                     onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'">
+                                <h2 class="text-xl font-semibold">{{ product.name }}</h2>
+                                <p class="text-gray-600 mt-2">{{ product.price }} грн</p>
+                                <div class="flex space-x-2 mt-4">
+                                    <a href="#" 
+                                        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md text-center hover:bg-blue-600 transition-colors add-to-cart-ajax" 
+                                        data-url="{{ url_for('shop.add_to_cart_ajax', product_id=product.id) }}">
+                                        Купити
+                                    </a>
+                                    <a href="{{ url_for('shop.remove_from_wishlist', product_id=product.id) }}" 
+                                        class="flex-1 bg-red-500 text-white px-4 py-2 rounded-md text-center hover:bg-red-600 transition-colors">
+                                        Видалити
+                                     </a>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+                    <h2 class="text-xl font-semibold mb-6">Summary</h2>
+                    <div class="space-y-4">
+                        <div id="summary-details"></div>
+                        
+                        <button onclick="handleCheckout()" class="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition duration-200">
+                            Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
