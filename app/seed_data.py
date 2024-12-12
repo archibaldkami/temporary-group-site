@@ -62,4 +62,4 @@ def seed_categories():
 if __name__ == '__main__':
     seed_categories()
     seed_subcategories()
-    seed_products()
+    # seed_products()
