@@ -16,12 +16,46 @@ api_bp = Blueprint('api', __name__)
 @api_bp.route('/api/products', methods=['GET'])
 def get_all_products():
     try:
-        products = get_products()
-        return jsonify([dict(product) for product in products]), 200
+        category = request.args.get('category')
+        subcategory = request.args.get('subcategory')
+        
+        conn = get_db_connection()
+
+        if category:
+            category = conn.execute('SELECT * FROM categories WHERE name = ?', (category.capitalize(),),).fetchone()
+        
+        if subcategory:
+            subcategory = conn.execute('SELECT * FROM subcategories WHERE name = ?', (subcategory.capitalize(),),).fetchone()
+
+        if category and subcategory:
+            products = conn.execute('SELECT * FROM products WHERE (category_id, subcategory_id) = (?, ?)', (category['id'], subcategory['id'],),).fetchall()
+        elif category or subcategory:
+            if category:
+                products = conn.execute('SELECT * FROM products WHERE category_id = ?', (category['id'],),).fetchall()
+            else:
+                products = conn.execute('SELECT * FROM products WHERE subcategory_id = ?', (subcategory['id'],),).fetchall()
+        else:
+            products = conn.execute('SELECT * FROM products').fetchall()
+
+        products = [dict(p) for p in products]
+        conn.close()
+        return jsonify(products), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# # Users endpoints
+@api_bp.route('/api/products/<int:product_id>', methods=['GET'])
+def get_product_details(product_id):
+    try:
+        conn = get_db_connection()
+        details = conn.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchall()
+        feedback = conn.execute('SELECT * FROM feedback WHERE product_id = ?', (product_id,)).fetchall()
+        conn.close()
+        return jsonify([*[dict(d) for d in details], *[dict(f) for f in feedback]]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# Users endpoints
 @api_bp.route('/api/users', methods=['GET'])
 def get_all_users():
     try:
@@ -29,6 +63,31 @@ def get_all_users():
         return jsonify([dict(order) for order in orders]), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/api/users/<int:user_id>', methods=['GET'])
+def get_user_details(user_id):
+    try:
+        product_id = request.args.get('product_id')
+        details = request.args.get('details', 'true').lower() == 'true'
+        conn = get_db_connection()
+        result = []
+        if details:
+            details = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+            if details:
+                result.append(dict(details))
+
+        if product_id:
+            user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+            feedback = conn.execute('SELECT * FROM feedback WHERE (product_id, email) = (?, ?)', (product_id, user['email'],),).fetchall()
+            result.extend([dict(f) for f in feedback])
+        
+        conn.close()
+        
+        return jsonify(result), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 # Orders endpoints
 @api_bp.route('/api/orders', methods=['GET'])
@@ -91,6 +150,16 @@ def get_all_feedback():
     try:
         conn = get_db_connection()
         feedback = conn.execute('SELECT * FROM feedback').fetchall()
+        conn.close()
+        return jsonify([dict(f) for f in feedback]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/api/feedback/<int:product_id>', methods=['GET'])
+def get_product_feedbacks(product_id):
+    try:
+        conn = get_db_connection()
+        feedback = conn.execute('SELECT * FROM feedback WHERE product_id = ?', (product_id,)).fetchall()
         conn.close()
         return jsonify([dict(f) for f in feedback]), 200
     except Exception as e:

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<script src="/static/script.js"></script>
 <div class="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Редагування товару</h1>
     
@@ -49,13 +50,14 @@
         <div class="form-group">
             <label class="block text-gray-700 font-medium">Підкатегорія</label>
             <select 
+                id="subcategory" 
                 name="subcategory_id" 
                 class="form-control w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" 
                 required
             >
                 <option value="">Оберіть підкатегорію</option>
                 {% for subcategory in subcategories %}
-                <option value="{{ subcategory.id }}" {% if subcategory.id == product.subcategory_id %}selected{% endif %}>
+                <option value="{{ subcategory.id }}" data-category="{{ subcategory.category_id }}">
                     {{ subcategory.name }}
                 </option>
                 {% endfor %}

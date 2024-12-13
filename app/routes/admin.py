@@ -9,8 +9,6 @@ admin_bp = Blueprint('admin', __name__)
 @role_required(['admin'])
 def admin():
     conn = get_db_connection()
-    
-    # Отримання даних для адмін-панелі
     feedback = conn.execute('SELECT * FROM feedback').fetchall()
     users = conn.execute('SELECT * FROM users').fetchall()
     products = conn.execute('SELECT * FROM products').fetchall()
@@ -18,11 +16,7 @@ def admin():
     conn.close()
     
     orders = get_orders()
-    return render_template('admin.html', 
-                           feedback=feedback, 
-                           orders=orders, 
-                           users=users, 
-                           products=products)
+    return render_template('admin.html', feedback=feedback, orders=orders, users=users, products=products)
 
 # Функції для керування користувачами
 @admin_bp.route('/admin/add_user', methods=['GET', 'POST'])
@@ -59,9 +53,7 @@ def add_user():
             flash(f'Помилка додавання користувача: {str(e)}')
         finally:
             conn.close()
-        
         return redirect(url_for('admin.admin'))
-    
     return render_template('add_user.html')
 
 @admin_bp.route('/admin/edit_user/<int:user_id>', methods=['GET', 'POST'])

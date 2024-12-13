@@ -6,8 +6,6 @@
         <div class="md:w-1/2">
             <img src="{{ product['image_url'] }}" alt="{{ product['name'] }}" class="w-full h-auto object-cover rounded-lg shadow-md">
         </div>
-        
-        <!-- Інформація про продукт -->
         <div class="md:w-1/2">
             <h1 class="text-3xl font-bold mb-4 text-gray-800">{{ product['name'] }}</h1>
             
@@ -22,8 +20,6 @@
                     <strong>Підкатегорія:</strong> {{ product['subcategory_name'] }}
                 </p>
             </div>
-            
-            <!-- Кнопки дій -->
             <div class="flex space-x-4 mb-4">
                 <a href="{{ url_for('shop.add_to_cart', product_id=product['id']) }}" 
                    class="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition">
@@ -36,12 +32,8 @@
             </div>
         </div>
     </div>
-    
-    <!-- Секція відгуків -->
     <div class="mt-8">
         <h2 class="text-2xl font-bold mb-4 text-gray-800">Відгуки</h2>
-        
-        <!-- Форма додавання відгуку -->
         <form action="{{ url_for('shop.add_feedback', product_id=product['id']) }}" method="POST" class="mb-6">
             <div class="mb-4">
                 <input type="text" name="name" placeholder="Ваше ім'я" required 
@@ -65,8 +57,6 @@
                 Надіслати відгук
             </button>
         </form>
-        
-        <!-- Список відгуків -->
         {% if product['feedback'] %}
             {% for feedback in product['feedback'] %}
             <div class="bg-gray-100 p-4 rounded-md mb-4">

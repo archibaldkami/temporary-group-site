@@ -1,7 +1,6 @@
 import sqlite3
 import os
 from datetime import datetime
-# from seed_data import *
 
 def get_db_connection():
     conn = sqlite3.connect('db.sqlite')
@@ -24,12 +23,6 @@ def init_db():
         conn.execute('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', ("admin", "admin@admin", "scrypt:32768:8:1$EBFi3PMcco1xiBrc$f769346f940011b1c2354c7c463c92d6ee72b1241c34efd57ab6184479fc256c8b75a996f902989faffea16154ec71b12b7b9934ea237a24f9443cb65a9a78a3", "admin"))
     conn.commit()
     conn.close()
-
-    # # Закоментувати
-    # seed_categories()
-    # seed_subcategories()
-    # seed_products()
-
 
 def get_products_by_category(category_id):
     products = get_products()
@@ -85,11 +78,9 @@ def get_all_categories_with_subcategories():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Отримуємо всі категорії
     cursor.execute('SELECT id, name FROM categories')
     categories = [dict(cat) for cat in cursor.fetchall()]
 
-    # Для кожної категорії отримуємо її підкатегорії
     for category in categories:
         cursor.execute('SELECT id, name FROM subcategories WHERE category_id = ?', (category['id'],))
         category['subcategories'] = [dict(sub) for sub in cursor.fetchall()]
@@ -102,7 +93,6 @@ def get_product_categories(product):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Отримуємо інформацію про категорію
     cursor.execute('SELECT name FROM categories WHERE id = ?', (product['category_id'],))
     category_result = cursor.fetchone()
     category_name = dict(category_result)['name'] if category_result else "Невідома категорія"
@@ -120,7 +110,6 @@ def get_product_categories(product):
 
     if subcategory_result:
         subcategory_result = dict(subcategory_result)
-        # Перевіряємо, чи підкатегорія належить до правильної категорії
         if subcategory_result['category_name'] == category_name:
             subcategory_name = subcategory_result['subcategory_name']
         else:
@@ -172,8 +161,6 @@ def get_product_details(product_id):
     """Отримує детальну інформацію про продукт за його ID"""
     conn = get_db_connection()
     cursor = conn.cursor()
-
-    # Отримуємо інформацію про продукт
     cursor.execute('SELECT * FROM products WHERE id = ?', (product_id,))
     product = cursor.fetchone()
 
@@ -181,16 +168,12 @@ def get_product_details(product_id):
         conn.close()
         return None
 
-    # Отримуємо категорію та підкатегорію
     category_name, subcategory_name = get_product_categories(dict(product))
-
-    # Отримуємо відгуки про продукт
     cursor.execute('SELECT * FROM feedback WHERE product_id = ?', (product_id,))
     feedback_list = cursor.fetchall()
 
     conn.close()
 
-    # Перетворюємо результати в словники
     product_dict = dict(product)
     product_dict['category_name'] = category_name
     product_dict['subcategory_name'] = subcategory_name
