@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from models import get_db_connection
+from models import get_db_connection, get_orders, get_order_details, update_order_status, delete_order
 from routes.auth import role_required
 import os
 
@@ -29,6 +29,25 @@ def dashboard():
     
     return render_template('seller_dashboard.html', products=products, orders=orders)
 
+@seller_bp.route('/seller/order/<int:order_id>')
+@role_required(['seller'])
+def order_details(order_id):
+    order, items = get_order_details(order_id)
+    return render_template('order_details.html', order=order, items=items)
+
+@seller_bp.route('/seller/update_order_status/<int:order_id>', methods=['POST'])
+@role_required(['seller'])
+def update_order(order_id):
+    status = request.form['status']
+    update_order_status(order_id, status)
+    return redirect(url_for('seller.dashboard'))
+
+@seller_bp.route('/seller/delete_order/<int:order_id>', methods=['POST'])
+@role_required(['seller'])
+def delete_order_route(order_id):
+    delete_order(order_id)
+    return redirect(url_for('seller.dashboard'))
+
 @seller_bp.route('/seller/add_product', methods=['GET', 'POST'])
 @role_required(['seller'])
 def add_product():
@@ -49,7 +68,6 @@ def add_product():
         
         conn = get_db_connection()
         cursor = conn.cursor()
-        
         cursor.execute('''
             INSERT INTO products 
             (name, price, image, category_id, subcategory_id, seller_id) 

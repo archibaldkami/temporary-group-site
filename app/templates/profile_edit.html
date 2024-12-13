@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mx-auto min-h-screen p-6 bg-gray-100 flex items-center justify-center">
-    <!-- Панель редагування профілю -->
-    <div class="w-full max-w-3xl bg-white p-10 rounded-3xl shadow-lg">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Редагування профілю</h1>
+<div class="container mx-auto min-h-screen p-6 bg-gray-200 flex items-center justify-center">
+    <div class="w-full max-w-3xl bg-white p-10 rounded-2xl shadow-xl">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Редагування профілю</h1>
         <form method="POST" class="space-y-6">
-            <!-- Ім'я -->
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Ім'я</label>
                 <input 
@@ -13,22 +11,44 @@
                     name="name" 
                     value="{{ user.name }}" 
                     required 
-                    class="w-full p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400" 
+                    class="w-full p-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     placeholder="Введіть ваше ім'я"
                 >
             </div>
-
-            <!-- Email -->
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Email (не можна змінити)</label>
                 <input 
                     type="email" 
                     value="{{ user.email }}" 
                     disabled 
-                    class="w-full p-4 border border-gray-300 rounded-full bg-gray-100 text-gray-500"
+                    class="w-full p-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
                 >
             </div>
-
-            <!-- Телефон -->
             <div>
-                <label class="block text-gray-700 font
+                <label class="block text-gray-700 font-medium mb-2">Телефон</label>
+                <input 
+                    type="tel" 
+                    name="phone" 
+                    value="{{ user.phone }}" 
+                    class="w-full p-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                    placeholder="Введіть ваш номер телефону"
+                >
+            </div>
+            <div class="flex justify-between items-center">
+                <button 
+                    type="submit" 
+                    class="bg-black text-white py-3 px-6 rounded-full hover:bg-gray-800 transition"
+                >
+                    Зберегти
+                </button>
+                <a 
+                    href="/profile" 
+                    class="py-3 px-6 border border-gray-400 text-gray-700 rounded-full hover:bg-gray-100 transition"
+                >
+                    Скасувати
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -11,10 +11,8 @@ from routes.api import api_bp
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Необхідно для роботи з сесіями
 
-# Ініціалізація бази даних
 init_db()
 
-# Реєстрація блюпрінтів
 app.register_blueprint(feedback_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(shop_bp)

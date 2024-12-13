@@ -1,16 +1,79 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<h1>Редагування користувача</h1>
-<form method="POST">
-    <input type="text" name="name" value="{{ user.name }}" required>
-    <input type="email" name="email" value="{{ user.email }}" required>
-    <input type="tel" name="phone" value="{{ user.phone }}" required>
-    <input type="text" name="address" value="{{ user.address }}" required>
-    <select name="role" required>
-        <option value="buyer" {% if user.role == 'buyer' %}selected{% endif %}>Покупець</option>
-        <option value="seller" {% if user.role == 'seller' %}selected{% endif %}>Продавець</option>
-        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Адмін</option>
-    </select>
-    <button type="submit">Оновити</button>
-</form>
+<div class="container mx-auto min-h-screen p-6 bg-gray-200 flex items-center justify-center">
+    <div class="w-full max-w-3xl bg-white p-10 rounded-2xl shadow-xl">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Редагування користувача</h1>
+        <form method="POST" class="space-y-6">
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Ім'я</label>
+                <input 
+                    type="text" 
+                    name="name" 
+                    value="{{ user.name }}" 
+                    required 
+                    class="w-full p-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                    placeholder="Введіть ваше ім'я"
+                >
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Email</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    value="{{ user.email }}" 
+                    required 
+                    class="w-full p-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-500" 
+                    placeholder="Введіть ваш email"
+                >
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Телефон</label>
+                <input 
+                    type="tel" 
+                    name="phone" 
+                    value="{{ user.phone }}" 
+                    required 
+                    class="w-full p-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                    placeholder="Введіть ваш номер телефону"
+                >
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Адреса</label>
+                <input 
+                    type="text" 
+                    name="address" 
+                    value="{{ user.address }}" 
+                    required 
+                    class="w-full p-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                    placeholder="Введіть вашу адресу"
+                >
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Роль</label>
+                <select 
+                    name="role" 
+                    required 
+                    class="w-full p-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    <option value="buyer" {% if user.role == 'buyer' %}selected{% endif %}>Покупець</option>
+                    <option value="seller" {% if user.role == 'seller' %}selected{% endif %}>Продавець</option>
+                    <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Адмін</option>
+                </select>
+            </div>
+            <div class="flex justify-between items-center">
+                <button 
+                    type="submit" 
+                    class="bg-black text-white py-3 px-6 rounded-full hover:bg-gray-800 transition"
+                >
+                    Оновити
+                </button>
+                <a 
+                    href="/profile" 
+                    class="py-3 px-6 border border-gray-400 text-gray-700 rounded-full hover:bg-gray-100 transition"
+                >
+                    Скасувати
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
